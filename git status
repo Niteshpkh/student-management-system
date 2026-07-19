@@ -1,0 +1,11 @@
+[33mcommit 1c7617145bf3d233f836fb3098db350487c7c413[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Nitesh Pokhrel <niteshpokhrel84@gmail.com>
+Date:   Sat Jul 18 13:47:05 2026 +0545
+
+    Implement student CRUD features (except update) and integrate MongoDB
+
+[33mcommit 35d530091faadb9c5741a9646a2e33493c672ca8[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Nitesh Pokhrel <niteshpokhrel84@gmail.com>
+Date:   Sun Jul 12 20:06:07 2026 +0545
+
+    Initial push of student-management-system
