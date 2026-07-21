@@ -20,19 +20,23 @@ public class StudentController {
         studentService.saveStudent(studentEntity);
         return studentEntity;
     }
+
     @GetMapping
    public List <StudentEntity> getAll(){
       return  studentService.getAll();
     }
+
     @GetMapping("id/{id}")
     public StudentEntity findById( @PathVariable ObjectId id){
         return studentService.findById(id).orElse(null);
     }
+
     @DeleteMapping("id/{id}")
     public boolean deleteById(@PathVariable ObjectId id){
         studentService.deleteById(id);
         return true;
     }
+
     @PutMapping("id/{id}")
     public StudentEntity updateStudentById(@PathVariable ObjectId id, @RequestBody StudentEntity newEntry) {
         StudentEntity old = studentService.findById(id).orElse(null);
