@@ -1,13 +1,17 @@
 package com.nitesh.student.Controller;
 
-import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Entity.TeacherEntity;
 import com.nitesh.student.Services.TeacherServices;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/teacher_data")
@@ -16,28 +20,36 @@ public class TeacherController {
     public TeacherServices teacherServices;
 
     @PostMapping
-    public TeacherEntity  saveTeacher(@RequestBody TeacherEntity teacherEntity){
-        teacherServices.saveTeacher(teacherEntity);
-        return teacherEntity;
+    public ResponseEntity <TeacherEntity>  saveTeacher(@RequestBody TeacherEntity teacherEntity) {
+        try {
+            teacherServices.saveTeacher(teacherEntity);
+            return new ResponseEntity<>(teacherEntity, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping
-    public List<TeacherEntity> getAllTeacher(){
-       return teacherServices.getAllTeacher();
+    public ResponseEntity <List<TeacherEntity>> getAllTeacher(){
+          return new ResponseEntity<>(teacherServices.getAllTeacher(), HttpStatus.OK);
     }
 
     @GetMapping("id/{id}")
-    public void findByTeacherId(@PathVariable ObjectId id ){
-        teacherServices.getTeacherById(id);
-
+    public ResponseEntity <TeacherEntity> findByTeacherId(@PathVariable ObjectId id ){
+      Optional<TeacherEntity> teacher =  teacherServices.getTeacherById(id);
+      if(teacher.isPresent()){
+          return new ResponseEntity<>(teacher.get(), HttpStatus.OK);
+      }
+        return new ResponseEntity<>( HttpStatus.NOT_FOUND);
     }
     @DeleteMapping("id/{id}")
-    public void deleteTeacherById(@PathVariable ObjectId id){
+    public ResponseEntity<?> deleteTeacherById(@PathVariable ObjectId id){
         teacherServices.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("id/{id}")
-    public TeacherEntity updateTeacherById(@PathVariable ObjectId id, @RequestBody TeacherEntity newTeacherEntry){
+    public ResponseEntity<?> updateTeacherById(@PathVariable ObjectId id, @RequestBody TeacherEntity newTeacherEntry, HttpEntity<Object> httpEntity){
         TeacherEntity old = teacherServices.getTeacherById(id).orElse(null);
         if(old!=null){
             old.setEmail(newTeacherEntry.getEmail()!=null ? newTeacherEntry.getEmail(): old.getEmail());
@@ -47,10 +59,10 @@ public class TeacherController {
             old.setSubject(newTeacherEntry.getSubject()!=null? newTeacherEntry.getSubject() : old.getSubject());
             old.setTeachers_name(newTeacherEntry.getTeachers_name()!=null ? newTeacherEntry.getTeachers_name() : old.getTeachers_name());
 
-            return old;
+            return new ResponseEntity<>(old, HttpStatus.OK);
         }
         else{
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
 
