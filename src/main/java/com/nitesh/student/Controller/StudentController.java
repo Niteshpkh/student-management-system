@@ -1,7 +1,9 @@
 package com.nitesh.student.Controller;
 
 import com.nitesh.student.Entity.StudentEntity;
+import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Services.StudentServices;
+import com.nitesh.student.Services.UserServices;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,25 +19,28 @@ public class StudentController {
     @Autowired
     private StudentServices studentService;
 
+    @Autowired
+    private UserServices userService;
 
-    @PostMapping
-    public ResponseEntity<StudentEntity> saveStudent(@RequestBody StudentEntity studentEntity){
+    @PostMapping("{UserName}")
+    public ResponseEntity<StudentEntity> saveStudent(@RequestBody StudentEntity studentEntity, @PathVariable String UserName) {
        try {
-           studentService.saveStudent(studentEntity);
-           return new ResponseEntity<>(HttpStatus.CREATED);
-       }
-       catch (Exception e)
-       {
-           return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+           UserEntity user = userService.findByUserName(UserName);
+       } catch (Exception e) {
+           throw new RuntimeException(e);
        }
 
     }
 
-    @GetMapping
-   public ResponseEntity<List<StudentEntity>> getAll(){
-
-        return  new ResponseEntity<>(studentService.getAll(), HttpStatus.OK);
-    }
+    @GetMapping("{UserName}")
+    public ResponseEntity<?> getAllStudentEntries(@PathVariable String UserName) {
+        UserEntity user = userService.findByUserName(UserName);
+        List<StudentEntity> all = user.getStudentEntity();
+        if(all!=null && !all.isEmpty()){
+            return new ResponseEntity<>(all, HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
 
     @GetMapping("/id/{id}")
     public ResponseEntity<StudentEntity> findById( @PathVariable ObjectId id){

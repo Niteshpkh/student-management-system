@@ -1,11 +1,7 @@
 package com.nitesh.student.Controller;
 
-import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Entity.UserEntity;
-import com.nitesh.student.Services.StudentServices;
-import com.nitesh.student.Services.UserService;
-import org.apache.catalina.User;
-import org.bson.types.ObjectId;
+import com.nitesh.student.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,26 +13,49 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     @Autowired
-    private UserService userService;
+    private UserServices userService;
 
     @GetMapping
-    public List<UserEntity> getAllUser(){
-        return userService.getAll();
+    public List<UserEntity> getUser(){
+        return userService.getAllUser();
     }
-   @PostMapping
-    public void createNewUser(@RequestBody UserEntity user){
-        userService.saveEntry(user);
+
+    @PostMapping
+    public ResponseEntity<?> saveUser(@RequestBody UserEntity user){
+        userService.saveUser(user);
+      return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @PutMapping("/{userName}")
-    public ResponseEntity<?> updateUser(@RequestBody UserEntity userEntity, @PathVariable String userName)
-    {
-     UserEntity UserInDb =  userService.findByUserName(userName);
-     if(UserInDb != null){
-        UserInDb.setUserName(userEntity.getUserName());
-        UserInDb.setPassword(userEntity.getPassword());
-        userService.saveEntry(UserInDb);
-     }
-     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable String id){
+        Optional<UserEntity> user = userService.findByUserId(id);
+        if(user.isPresent()){
+            return new ResponseEntity<>(user.get() ,HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
+    @DeleteMapping ("/{id}")
+    public  ResponseEntity<?> deleteUserById(@PathVariable String id){
+        userService.deleteByUserId(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping ("/{UserName}")
+    public ResponseEntity<?> getUserByUserName (@PathVariable String UserName){
+       Optional<UserEntity> user = Optional.ofNullable(userService.findByUserName(UserName));
+       if(user.isPresent()){
+           return  new ResponseEntity<>(user.get(), HttpStatus.OK);
+       }
+       else  {
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+
+    }
+
+
 }
