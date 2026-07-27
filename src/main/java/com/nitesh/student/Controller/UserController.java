@@ -76,5 +76,17 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody UserEntity user){
+        UserEntity authenticatedUser = userService.authenticateUser(
+                user.getUserName(),
+                user.getPassword()
+        );
+        if(authenticatedUser!=null){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
 
 }

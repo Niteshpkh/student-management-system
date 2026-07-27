@@ -3,6 +3,8 @@ package com.nitesh.student.Services;
 import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -58,5 +60,14 @@ public class UserServices {
         }
         return null;
 
+    }
+    public UserEntity authenticateUser(String userName, String password){
+        UserEntity user = userRepo.findByUserName(userName);
+        if(user!=null && user.getPassword().equals(password)){
+            return  user;
+        }
+        else {
+           return null;
+        }
     }
 }
