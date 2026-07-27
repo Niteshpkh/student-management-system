@@ -39,13 +39,13 @@ public class UserController {
         }
     }
 
-    @DeleteMapping ("/{id}")
+    @DeleteMapping ("/id/{id}")
     public  ResponseEntity<?> deleteUserById(@PathVariable String id){
         userService.deleteByUserId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping ("/{UserName}")
+    @GetMapping ("/UserName/{UserName}")
     public ResponseEntity<?> getUserByUserName (@PathVariable String UserName){
        Optional<UserEntity> user = Optional.ofNullable(userService.findByUserName(UserName));
        if(user.isPresent()){
@@ -55,6 +55,25 @@ public class UserController {
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
 
+    }
+    @PutMapping("/id/{id}")
+    public ResponseEntity<?> updateUserById(@RequestBody UserEntity newUser, @PathVariable String id){
+        Optional<UserEntity> oldUser = userService.findByUserId(id);
+        if(oldUser.isPresent()){
+            UserEntity user = oldUser.get();
+            if(newUser.getRole()!=null){
+            user.setRole(newUser.getRole());
+            }
+            if(newUser.getUserName()!=null) {
+                user.setUserName(newUser.getUserName());
+            }
+            if(newUser.getPassword()!=null) {
+                user.setPassword(newUser.getPassword());
+            }
+            userService.saveUser(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

@@ -1,9 +1,7 @@
 package com.nitesh.student.Controller;
 
 import com.nitesh.student.Entity.StudentEntity;
-import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Services.StudentServices;
-import com.nitesh.student.Services.UserServices;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,61 +14,86 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/student_data")
 public class StudentController {
+
     @Autowired
     private StudentServices studentService;
 
-    @Autowired
-    private UserServices userService;
-
-    @PostMapping("{UserName}")
-    public ResponseEntity<StudentEntity> saveStudent(@RequestBody StudentEntity studentEntity, @PathVariable String UserName) {
-       try {
-           UserEntity user = userService.findByUserName(UserName);
-       } catch (Exception e) {
-           throw new RuntimeException(e);
-       }
-
+    // Save Student
+    @PostMapping
+    public ResponseEntity<?> saveStudent(@RequestBody StudentEntity studentEntity) {
+        studentService.saveStudent(studentEntity);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("{UserName}")
-    public ResponseEntity<?> getAllStudentEntries(@PathVariable String UserName) {
-        UserEntity user = userService.findByUserName(UserName);
-        List<StudentEntity> all = user.getStudentEntity();
-        if(all!=null && !all.isEmpty()){
-            return new ResponseEntity<>(all, HttpStatus.OK);
-        }
-        return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
-}
+    // Get All Students
+    @GetMapping
+    public ResponseEntity<List<StudentEntity>> getAllStudents() {
+        List<StudentEntity> students = studentService.getAllStudent();
 
+        if (!students.isEmpty()) {
+            return new ResponseEntity<>(students, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // Get Student By Id
     @GetMapping("/id/{id}")
-    public ResponseEntity<StudentEntity> findById( @PathVariable ObjectId id){
-       Optional<StudentEntity> student = studentService.findById(id);
-        if(student.isPresent()){
-            return new ResponseEntity<>(studentService.findById(id).orElse(null) , HttpStatus.OK);
+    public ResponseEntity<?> findById(@PathVariable ObjectId id) {
+
+        Optional<StudentEntity> student = studentService.findById(id);
+
+        if (student.isPresent()) {
+            return new ResponseEntity<>(student.get(), HttpStatus.OK);
         }
-       else{
-           return  new ResponseEntity<>(HttpStatus.NOT_FOUND);        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    // Delete Student
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable ObjectId id){
-       studentService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> deleteById(@PathVariable ObjectId id) {
+
+        studentService.deleteById(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Update Student
     @PutMapping("/id/{id}")
-    public ResponseEntity<?> updateStudentById(@PathVariable ObjectId id, @RequestBody StudentEntity newEntry) {
+    public ResponseEntity<?> updateStudentById(
+            @PathVariable ObjectId id,
+            @RequestBody StudentEntity newEntry) {
+
         StudentEntity old = studentService.findById(id).orElse(null);
+
         if (old != null) {
-            old.setAge(newEntry.getAge() != null ? newEntry.getAge() : old.getAge());
-            old.setGrade(newEntry.getGrade() != null && !newEntry.getGrade().equals("") ? newEntry.getGrade() : old.getGrade());
-            old.setName(newEntry.getName() != null && !newEntry.getName().equals("") ? newEntry.getName() : old.getName());
-            old.setContact_no(newEntry.getContact_no() != null ? newEntry.getContact_no() : old.getContact_no());
-            old.setParents_name(newEntry.getParents_name() != null && !newEntry.getParents_name().equals("") ? newEntry.getParents_name() : old.getParents_name());
+
+            old.setName(newEntry.getName() != null && !newEntry.getName().isBlank()
+                    ? newEntry.getName()
+                    : old.getName());
+
+            old.setAge(newEntry.getAge() != null
+                    ? newEntry.getAge()
+                    : old.getAge());
+
+            old.setGrade(newEntry.getGrade() != null && !newEntry.getGrade().isBlank()
+                    ? newEntry.getGrade()
+                    : old.getGrade());
+
+            old.setContact_no(newEntry.getContact_no() != null
+                    ? newEntry.getContact_no()
+                    : old.getContact_no());
+
+            old.setParents_name(newEntry.getParents_name() != null && !newEntry.getParents_name().isBlank()
+                    ? newEntry.getParents_name()
+                    : old.getParents_name());
+
             studentService.saveStudent(old);
+
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

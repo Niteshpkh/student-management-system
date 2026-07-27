@@ -18,7 +18,7 @@ public class StudentServices {
         StudentRepo.save(studentEntity);
     }
 
-    public List<StudentEntity> getAll(){
+    public List<StudentEntity> getAllStudent(){
     return StudentRepo.findAll();
     }
     public Optional<StudentEntity> findById(ObjectId id){
