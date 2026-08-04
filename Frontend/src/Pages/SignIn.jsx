@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 import "./SignIn.css";
 
 const SignIn = () => {
@@ -20,7 +21,7 @@ const SignIn = () => {
     });
   }
   console.log(formData);
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (formData.userName.trim() === "") {
       alert("userName is required");
@@ -32,7 +33,8 @@ const SignIn = () => {
     }
 
     if (formData.password === "") {
-      alert("you must enter the password")
+      alert("you must enter the password");
+      return;
     }
 
   if (formData.confirmPassword === "") {
@@ -48,14 +50,26 @@ const SignIn = () => {
     alert("password must be gat least 6 characters");
     return;
   }
-  alert("Account created successfully");
-  setFormData({
+  const user = {
+    userName : formData.userName,
+    password : formData.password
+  };
+  try{
+   const response=  await axios.post("http://localhost:8080/user", user);
+   console.log(response);
+    alert("Account created successfully");
+     setFormData({
     userName: "",
     email: "",
     password: "",
     confirmPassword: ""
   });
   navigate("/");
+  }
+  catch(error){
+    console.log(error);
+    alert ("something went wrong");
+  }
 }
 
 
