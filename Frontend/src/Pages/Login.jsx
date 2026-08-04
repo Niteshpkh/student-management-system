@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import './Login.css'
 
 const Login = () => {
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        name: "",
+        userName: "",
         password: ""
     });
 
     function submitForm(e) {
         e.preventDefault();
-        console.log("Form submitted Successfully");
+            if(formData.userName === "")
+        {
+            alert("enter username");
+        }
+        if(formData.password === "")
+        {
+            alert("please enter the password");
+        }
+       
+        setFormData({
+            userName : "",
+            password : ""
+        });
+        navigate('/dashboard');
     }
 
     const handleChange = (e) => {
@@ -20,46 +35,47 @@ const Login = () => {
             ...formData,
             [name]: value
         });
-
         console.log(formData);
     }
 
     return (
-        <div>
-            <form onSubmit={submitForm}>
-                <div>
-                    <label>Username</label><br />
-                    <input
-                        type="text"
-                        placeholder="Enter username"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                </div>
-
-                <div>
-                    <label>Password</label><br />
-                    <input
-                        type="password"
-                        placeholder="Enter password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-                </div>
-
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
-
-                <div>
-                    <p>
-                        Don't have an account? <Link to="/signin">Sign In</Link>
-                    </p>
-                </div>
-            </form>
+    <div className="login-container">
+    <form className="login-form" onSubmit={submitForm}>
+        <div className="form-group">
+            <label className="login-label">Username</label><br />
+            <input
+                className="login-input"
+                type="text"
+                placeholder="Enter username"
+                name="userName"
+                value={formData.userName}
+                onChange={handleChange}
+            />
         </div>
+
+        <div className="form-group">
+            <label className="login-label">Password</label><br />
+            <input
+                className="login-input"
+                type="password"
+                placeholder="Enter password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+            />
+        </div>
+
+        <div className="button-group">
+            <button className="login-button" type="submit">Submit</button>
+        </div>
+
+        <div className="signup-text">
+            <p>
+                Don't have an account? <Link className="signup-link" to="/signin">Sign In</Link>
+            </p>
+        </div>
+    </form>
+</div>
     );
 };
 

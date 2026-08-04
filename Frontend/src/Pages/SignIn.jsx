@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./SignIn.css";
 
 const SignIn = () => {
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -47,13 +48,14 @@ const SignIn = () => {
     alert("password must be gat least 6 characters");
     return;
   }
-  alert("form submitted");
+  alert("Account created successfully");
   setFormData({
     userName: "",
     email: "",
     password: "",
     confirmPassword: ""
   });
+  navigate("/");
 }
 
 
