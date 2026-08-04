@@ -5,6 +5,7 @@ import axios from 'axios'
 
 const Login = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState("")
 
     const [formData, setFormData] = useState({
         userName: "",
@@ -26,16 +27,20 @@ const Login = () => {
             password: formData.password
         };
         try {
-            const response = await axios.post("http://localhost:8080/user/login", user);
+            await axios.post("http://localhost:8080/user/login", user);
             setFormData({
                 userName: "",
                 password: ""
             });
+            setError("")
             navigate('/dashboard');
         }
         catch (error) {
-            console.log(error);
-            console.log("error occured")
+           setError("Invalid username and password");
+           setFormData({
+            userName : "",
+            password : ""
+           });
         }
     }
 
@@ -79,10 +84,12 @@ const Login = () => {
                 <div className="button-group">
                     <button className="login-button" type="submit">Submit</button>
                 </div>
+                {error && <p className='error'>{error}</p>}
+                
 
                 <div className="signup-text">
                     <p>
-                        Don't have an account? <Link className="signup-link" to="/signin">Sign In</Link>
+                        Don't have an account? <Link className="signup-link" to="/signin">Sign Up</Link>
                     </p>
                 </div>
             </form>
