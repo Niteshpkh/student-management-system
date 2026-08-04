@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins =  "http://localhost:5173, http://localhost:5174")
 public class UserController {
 
     @Autowired
@@ -27,19 +27,6 @@ public class UserController {
     public ResponseEntity<?> saveUser(@RequestBody UserEntity user){
         userService.saveUser(user);
       return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @PostMapping("/login")
-    public   ResponseEntity<?> loginUser(@RequestBody UserEntity user)
-    {
-        UserEntity authenticatedUser = userService.authenticateUser(
-                user.getUserName(),
-                user.getPassword()
-        );
-if(authenticatedUser !=  null){
-    return new ResponseEntity<>(HttpStatus.OK);
-}
-return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/{id}")
