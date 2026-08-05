@@ -9,12 +9,16 @@ import Home from "./Pages/Home";
 import SignIn from "./Pages/SignIn";
 import Layout from "./Layout/Layout";
 import User from "./Pages/User";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
     <Routes>
+
       <Route path="/" element={<Login />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route element = {<ProtectedRoute/>}>
+
       <Route element ={<Layout/>}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/students" element={<Students />} />
@@ -22,6 +26,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/users" element = {<User/>}/>
+      </Route>
       </Route>
     </Routes>
   );

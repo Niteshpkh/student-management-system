@@ -31,14 +31,14 @@ const Login = () => {
         await new Promise(resolve => setTimeout (resolve, 2000));
         try {
             await axios.post("http://localhost:8080/user/login", user);
-
+            localStorage.setItem("userName", formData.userName);
             setFormData({
                 userName: "",
                 password: ""
             });
             localStorage.setItem("IsLoggedIn","true");
             setError("")
-            navigate('/dashboard');
+            navigate("/dashboard");
         }
         catch (error) {
             setLoading(false);

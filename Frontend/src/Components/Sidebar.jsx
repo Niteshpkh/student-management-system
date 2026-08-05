@@ -2,9 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const Sidebar = () => {
-  const navigate = useNavigate("")
+  const navigate = useNavigate()
   function handleLLogout() {
     localStorage.removeItem("IsLoggedIn");
+    localStorage.removeItem("userName");
     navigate("/");
   }
   return (
@@ -31,7 +32,7 @@ const Sidebar = () => {
         </li>
 
         <li>
-          <Link to="#" onClick={handleLLogout} >Logout</Link>
+          <Link to="/" onClick={handleLLogout} >Logout</Link>
         </li>
 
       </ul>

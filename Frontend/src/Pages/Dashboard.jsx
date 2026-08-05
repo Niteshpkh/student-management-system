@@ -15,7 +15,7 @@ const Dashboard = () => {
   return (
     <div>
           <h1>Dashboard</h1>
-          <p>Welcome to Student Management System</p>
+          <p>Welcome  to Student Management System</p>
         </div>
 
    
