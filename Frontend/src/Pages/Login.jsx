@@ -32,6 +32,7 @@ const Login = () => {
                 userName: "",
                 password: ""
             });
+            localStorage.setItem("IsLoggedIn","true");
             setError("")
             navigate('/dashboard');
         }
