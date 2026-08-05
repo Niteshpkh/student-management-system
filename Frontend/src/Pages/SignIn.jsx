@@ -20,8 +20,7 @@ const SignIn = () => {
       [name]: value
     });
   }
-  console.log(formData);
-  
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     if (formData.userName.trim() === "") {
