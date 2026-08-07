@@ -61,37 +61,44 @@ console.log(response.data[0].id);
       return;
     }
 
-    if (student.contact_no.trim() === "") {
+    if (student.contact_no === "") {
       alert("Enter Contact Number");
       return;
     }
-
-    try {
-      await axios.post("http://localhost:8080/student_data", student);
-
-      alert("Student Added Successfully");
-
-      setStudent({
+try{
+  if(student.id){
+    await axios.put(`http://localhost:8080/student_data/${student.id}`,student);
+  }
+  else {
+    await axios.post("http://localhost:8080/student_data", student);
+  }
+  getAllStudents();
+  setStudent({
         age: "",
         name: "",
         grade: "",
         Parents_name: "",
         contact_no: "",
       });
+}
+catch(error){
+  console.log(error);
+}
+}
+  const handleDelete = async (id) => {
 
-      getAllStudents();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-   const handleDelete = async(id)=>{
     console.log(id);
-    await axios.delete(`http://localhost:8080/student_data/${id}`);
-    getAllStudents();
-    alert("student Deleted successfully");
 
-  }
+    await axios.delete(`http://localhost:8080/student_data/${id}`);
+
+    getAllStudents();
+
+    alert("Student deleted successfully");
+}
+
+const handleEdit = (student) => {
+ setStudent(student);
+}
 
   return (
     <div className="student-container">
@@ -149,8 +156,8 @@ console.log(response.data[0].id);
           onChange={handleChange}
         />
 
-        <button className="submit-btn" type="submit">
-          Add Student
+        <button className="submit-btn" type="submit"> 
+          {student.id ? "Update Student" : "Add Student"}
         </button>
       </form>
 
@@ -170,6 +177,7 @@ console.log(response.data[0].id);
               <th>Parent Name</th>
               <th>Contact Number</th>
               <th>Action</th>
+              <th>Edit</th>
             </tr>
           </thead>
 
@@ -181,9 +189,13 @@ console.log(response.data[0].id);
                 <td>{student.grade}</td>
                 <td>{student.Parents_name}</td>
                 <td>{student.contact_no}</td>
+                <td></td>
                 <td>
                   <button onClick={()=> handleDelete(student.id)}
                   >Delete</button>
+                </td>
+                <td>
+                  <button onClick={() => handleEdit(student)}>Update</button>
                 </td>
               </tr>
             ))}
