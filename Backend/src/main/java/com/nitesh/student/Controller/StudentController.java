@@ -2,7 +2,6 @@ package com.nitesh.student.Controller;
 
 import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Services.StudentServices;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/student_data")
+@CrossOrigin(origins = "http://localhost:5173")
 public class StudentController {
 
     @Autowired
@@ -26,20 +26,26 @@ public class StudentController {
     }
 
     // Get All Students
+//    @GetMapping
+//    public ResponseEntity<List<StudentEntity>> getAllStudents() {
+//        List<StudentEntity> students = studentService.getAllStudent();
+//
+//        if (!students.isEmpty()) {
+//            return new ResponseEntity<>(students, HttpStatus.OK);
+//        }
+//
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+
     @GetMapping
     public ResponseEntity<List<StudentEntity>> getAllStudents() {
         List<StudentEntity> students = studentService.getAllStudent();
-
-        if (!students.isEmpty()) {
-            return new ResponseEntity<>(students, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(students);
     }
 
     // Get Student By Id
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> findById(@PathVariable ObjectId id) {
+    public ResponseEntity<?> findById(@PathVariable String id) {
 
         Optional<StudentEntity> student = studentService.findById(id);
 
@@ -51,8 +57,8 @@ public class StudentController {
     }
 
     // Delete Student
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable ObjectId id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable String id) {
 
         studentService.deleteById(id);
 
@@ -60,9 +66,9 @@ public class StudentController {
     }
 
     // Update Student
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateStudentById(
-            @PathVariable ObjectId id,
+            @PathVariable String id,
             @RequestBody StudentEntity newEntry) {
 
         StudentEntity old = studentService.findById(id).orElse(null);

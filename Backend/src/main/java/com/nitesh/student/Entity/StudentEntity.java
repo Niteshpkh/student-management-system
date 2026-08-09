@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class StudentEntity {
 
     @Id
-    private ObjectId id;
+    private String id;
     private Long age;
     @NonNull
     private String name;

@@ -21,10 +21,10 @@ public class StudentServices {
     public List<StudentEntity> getAllStudent(){
     return StudentRepo.findAll();
     }
-    public Optional<StudentEntity> findById(ObjectId id){
+    public Optional<StudentEntity> findById(String id){
       return   StudentRepo.findById(id);
     }
-    public void  deleteById(ObjectId id){
+    public void  deleteById(String id){
         StudentRepo.deleteById(id);
     }
 }
