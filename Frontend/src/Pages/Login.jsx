@@ -30,6 +30,7 @@ const Login = () => {
         setLoading(true);
         await new Promise(resolve => setTimeout (resolve, 2000));
         try {
+            console.log("Sending to backend:", user);
             await axios.post("http://localhost:8080/user/login", user);
             localStorage.setItem("userName", formData.userName);
             setFormData({

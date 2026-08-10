@@ -1,14 +1,101 @@
-.dashboard{
-    display:flex;
-    min-height:100vh;
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
 }
 
-.main-content{
-    flex:1;
-    display:flex;
-    flex-direction:column;
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.dashboard-body{
-    padding:30px;
+.dashboard-body {
+  padding: 30px;
+}
+
+/* Dashboard heading */
+
+.dashboard-body h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #1f2937;
+}
+
+.dashboard-body > p {
+  margin-top: 8px;
+  margin-bottom: 30px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* Cards container */
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Individual card */
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Card title */
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Card number */
+
+.stat-card p {
+  margin: 12px 0 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .dashboard-body {
+    padding: 20px;
+  }
+
+  .dashboard-body h1 {
+    font-size: 26px;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 22px;
+  }
 }

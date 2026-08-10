@@ -92,7 +92,7 @@ return (
         />
 
         <input
-          type="password"
+          type="text"
           placeholder="Enter Password" name="password" value={formData.password} onChange={handleChange}
         />
 
