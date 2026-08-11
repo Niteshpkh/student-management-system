@@ -20,20 +20,21 @@ const Dashboard = () => {
 
   const cards = [
     {
+      type : "student",
       title:"Students",
       value: students.length
     },
     {
+      type : "teachers", 
       title : "Teachers",
       value : teachers.length
     },
     {
+      type : "user",
       title : "Users",
       value : users.length
     }
   ];
-
- 
 
   useEffect(() => {
     getData("http://localhost:8080/student_data", setStudents);
@@ -57,12 +58,14 @@ const Dashboard = () => {
         <div className="dashboard-body">
           <h1>Dashboard</h1>
           <p>Welcome to Student Management System</p>
-
           <div className="stats-container">
              {cards.map((card)=>(
-    <StatCard key={card.title} value={card.value} />
-  ))}
-          </div>
+    <StatCard 
+    key={card.title} 
+    value={card.value} 
+    />
+     ))}
+     </div>
         </div>
       </div>
     </div>

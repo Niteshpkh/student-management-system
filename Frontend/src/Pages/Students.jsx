@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./Student.css";
 import axios from "axios";
+import DataTable from "../Components/DataTable";
 
 const Students = () => {
   const [students, setStudents] = useState([]);
-
   const [student, setStudent] = useState({
     age: "",
     name: "",
