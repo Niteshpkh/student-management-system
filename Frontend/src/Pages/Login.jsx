@@ -68,7 +68,7 @@ const Login = () => {
                     <label className="login-label">Username</label><br />
                     <input
                         className="login-input"
-                        type="text"
+                        type="password"
                         placeholder="Enter username"
                         name="userName"
                         value={formData.userName}

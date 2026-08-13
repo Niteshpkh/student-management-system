@@ -1,0 +1,4 @@
+# MongoDB Atlas Local Connection Example
+# Copy this file to application-local.properties and replace placeholders with your actual MongoDB Atlas connection details.
+spring.data.mongodb.uri=mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.mongodb.net/?appName=Cluster0
+spring.data.mongodb.database=student_management_system

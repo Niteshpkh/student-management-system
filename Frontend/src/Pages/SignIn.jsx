@@ -10,7 +10,8 @@ const SignIn = () => {
     userName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    role : ""
   });
 
   const handleChange = (e) => {
@@ -52,7 +53,8 @@ const SignIn = () => {
   }
   const user = {
     userName : formData.userName,
-    password : formData.password
+    password : formData.password,
+    role: formData.role
   };
   try{
    const response =  await axios.post("http://localhost:8080/user", user);
@@ -62,7 +64,8 @@ const SignIn = () => {
     userName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    role: ""
   });
   navigate("/");
   }
@@ -100,6 +103,16 @@ return (
           type="password"
           placeholder="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange}
         />
+
+              <div>
+                    <label>Role:</label><br />
+                   <select value={formData.role} name= "role" onChange={handleChange}>
+                    <option value="">Select Role: </option>
+                    <option value="STUDENT">Student</option>
+                    <option value="TEACHER">Teacher</option>
+                    <option value="ADMIN">Admin</option>
+                   </select>
+                </div>
 
         <button type="submit">
           Register

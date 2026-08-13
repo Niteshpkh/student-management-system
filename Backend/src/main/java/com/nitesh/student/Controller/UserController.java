@@ -84,6 +84,7 @@ public class UserController {
                 user.getUserName(),
                 user.getPassword()
         );
+
         if(authenticatedUser!=null){
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -3,8 +3,6 @@ package com.nitesh.student.Services;
 import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +20,10 @@ public class UserServices {
 
 
     public void saveUser(UserEntity user){
+
+        System.out.println("Password Before hashing" + user.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println("Password After hashing" +user.getPassword());
         userRepo.save(user);
     }
 
@@ -69,7 +70,7 @@ public class UserServices {
     }
     public UserEntity authenticateUser(String userName, String password){
         UserEntity user = userRepo.findByUserName(userName);
-        if(user!=null && user.getPassword().equals(password)){
+        if(user!=null &&  passwordEncoder.matches(password, user.getPassword())){
             return  user;
         }
         else {
