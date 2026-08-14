@@ -33,6 +33,7 @@ const Login = () => {
             console.log("Sending to backend:", user);
             await axios.post("http://localhost:8080/user/login", user);
             localStorage.setItem("userName", formData.userName);
+            localStorage.setItem("password", formData.password);
             setFormData({
                 userName: "",
                 password: ""

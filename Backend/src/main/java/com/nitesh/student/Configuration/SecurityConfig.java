@@ -28,6 +28,7 @@ public class SecurityConfig {
                 })
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/user/current").authenticated()
                         .requestMatchers(HttpMethod.POST, "/user/login","/user/**").permitAll()
                         .requestMatchers("/student_data").permitAll()
                         .requestMatchers(HttpMethod.GET, "/student_data/**").hasAnyRole("ADMIN", "TEACHER", "STUDENT")

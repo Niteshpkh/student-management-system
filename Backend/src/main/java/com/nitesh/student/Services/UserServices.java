@@ -77,4 +77,7 @@ public class UserServices {
            return null;
         }
     }
+    public  UserEntity getCurrentUser(String userName){
+        return userRepo.findByUserName(userName);
+    }
 }
