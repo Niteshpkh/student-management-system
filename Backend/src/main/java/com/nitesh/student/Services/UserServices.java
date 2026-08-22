@@ -20,10 +20,7 @@ public class UserServices {
 
 
     public void saveUser(UserEntity user){
-
-        System.out.println("Password Before hashing" + user.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println("Password After hashing" +user.getPassword());
         userRepo.save(user);
     }
 

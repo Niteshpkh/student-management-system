@@ -1,5 +1,4 @@
 package com.nitesh.student.Controller;
-
 import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Services.StudentServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +24,6 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    // Get All Students
-//    @GetMapping
-//    public ResponseEntity<List<StudentEntity>> getAllStudents() {
-//        List<StudentEntity> students = studentService.getAllStudent();
-//
-//        if (!students.isEmpty()) {
-//            return new ResponseEntity<>(students, HttpStatus.OK);
-//        }
-//
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 
     @GetMapping
     public ResponseEntity<List<StudentEntity>> getAllStudents() {

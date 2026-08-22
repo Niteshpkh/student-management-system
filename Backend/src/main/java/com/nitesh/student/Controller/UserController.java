@@ -25,11 +25,7 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @PostMapping
-    public ResponseEntity<?> saveUser(@RequestBody UserEntity user){
-        userService.saveUser(user);
-      return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id){
@@ -79,19 +75,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserEntity user){
-        UserEntity authenticatedUser = userService.authenticateUser(
-                user.getUserName(),
-                user.getPassword()
-        );
 
-        if(authenticatedUser!=null){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return  new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
-    }
     @GetMapping("/current")
     public UserEntity getCurrentUser(Authentication authentication){
         String userName = authentication.getName();
