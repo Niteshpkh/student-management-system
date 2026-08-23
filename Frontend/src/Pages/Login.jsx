@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css'
-import axios from 'axios'
+import api from '../../api/axios';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -31,7 +31,9 @@ const Login = () => {
         await new Promise(resolve => setTimeout (resolve, 2000));
         try {
             console.log("Sending to backend:", user);
-            await axios.post("http://localhost:8080/user/login", user);
+            await api.post("/public/login", user),{
+                withCredentials : true
+            };
             localStorage.setItem("userName", formData.userName);
             localStorage.setItem("password", formData.password);
             setFormData({

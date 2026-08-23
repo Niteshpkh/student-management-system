@@ -7,7 +7,7 @@ const User = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/user", {
+      const response = await api.get("/user", {
         auth: {
           username: localStorage.getItem("userName"),
           password: localStorage.getItem("password"),
@@ -26,7 +26,7 @@ const User = () => {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/user/${id}`, {
+      await api.delete(`/user/${id}`, {
         auth: {
           username: localStorage.getItem("userName"),
           password: localStorage.getItem("password"),

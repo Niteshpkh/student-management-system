@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 
 const Sidebar = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   useEffect(() => {
-    axios.get("http://localhost:8080/user/current",{
+    api.get("/user/current",{
       auth: {
         username : localStorage.getItem("userName"),
         password : localStorage.getItem("password")

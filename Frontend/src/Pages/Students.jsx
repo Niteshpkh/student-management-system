@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Student.css";
 import axios from "axios";
 import DataTable from "../Components/DataTable";
+import api from "../../api/axios";
 
 const Students = () => {
   const [students, setStudents] = useState([]);
@@ -15,7 +16,7 @@ const Students = () => {
 
   const getAllStudents = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/student_data");
+      const response = await api.get("student_data");
       setStudents(response.data);
       console.log(response.data[0]);
 console.log(typeof response.data[0].id);
@@ -67,10 +68,10 @@ console.log(response.data[0].id);
     }
 try{
   if(student.id){
-    await axios.put(`http://localhost:8080/student_data/${student.id}`,student);
+    await api.put(`/student_data/${student.id}`);
   }
   else {
-    await axios.post("http://localhost:8080/student_data", student);
+    await api.post("/student_data", student);
   }
   getAllStudents();
   setStudent({
@@ -89,7 +90,7 @@ catch(error){
 
     console.log(id);
 
-    await axios.delete(`http://localhost:8080/student_data/${id}`);
+    await axios.delete(`student_data/${id}`);
 
     getAllStudents();
 

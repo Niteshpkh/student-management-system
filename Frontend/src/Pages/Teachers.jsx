@@ -19,7 +19,7 @@ const Teachers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(teacher);
-    await axios.post("http://localhost:8080/teacher_data", teacher);
+    await api.post("/teacher_data", teacher);
     getTeachers();
     setTeacher({
       teachers_name: "",
@@ -40,7 +40,7 @@ const Teachers = () => {
   ];
   const getTeachers = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/teacher_data");
+      const response = await api.get("/teacher_data");
       setTeachers(response.data);
     }
     catch (error) {
@@ -49,7 +49,7 @@ const Teachers = () => {
   };
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/teacher_data/${id}`);
+      await api.delete(`/teacher_data/${id}`);
       getTeachers();
     } catch (error) {
       console.error(error);

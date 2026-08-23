@@ -57,7 +57,7 @@ const SignIn = () => {
     role: formData.role
   };
   try{
-   const response =  await axios.post("http://localhost:8080/user", user);
+   const response =  await axios.post("http://localhost:8080/public/signup", user);
    console.log(response);
     alert("Account created successfully");
      setFormData({
