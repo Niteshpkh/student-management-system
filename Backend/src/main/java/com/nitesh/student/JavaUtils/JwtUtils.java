@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-@Component
 public class JwtUtils {
 
     private static final String SECRET_KEY =

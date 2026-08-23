@@ -4,6 +4,7 @@ import com.nitesh.student.JavaUtils.JwtUtils;
 import com.nitesh.student.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +33,17 @@ public class PublicController {
                     user.getUserName(), user.getPassword()));
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
             String jwt = jwtUtils.generateToken(userDetails.getUsername());
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
+
+            ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .maxAge(60 * 60)
+                    .sameSite("Lax")
+                    .build();
+            return ResponseEntity.ok()
+                    .header("Set-Cookie", cookie.toString())
+                    .build();
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

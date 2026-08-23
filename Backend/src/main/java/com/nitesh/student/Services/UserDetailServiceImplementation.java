@@ -18,6 +18,9 @@ public class UserDetailServiceImplementation implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepo.findByUserName(username);
         if(user!=null){
+            System.out.println("Username = " + user.getUserName());
+            System.out.println("Role = " + user.getRole());
+            System.out.println("Password = " + user.getPassword());
             return  User.builder()
                     .username(user.getUserName())
                     .password(user.getPassword())
