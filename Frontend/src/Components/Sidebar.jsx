@@ -8,10 +8,10 @@ const Sidebar = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   useEffect(() => {
-    api.get("/user/current",{
+    api.get("/user/current", {
       auth: {
-        username : localStorage.getItem("userName"),
-        password : localStorage.getItem("password")
+        username: localStorage.getItem("userName"),
+        password: localStorage.getItem("password")
       }
     })
       .then(response => {
@@ -21,8 +21,8 @@ const Sidebar = () => {
       .catch(error => {
         console.log("Error:", error);
       });
-    }, []);
-    function handleLLogout() {
+  }, []);
+  function handleLLogout() {
     localStorage.removeItem("IsLoggedIn");
     localStorage.removeItem("userName");
     navigate("/");
@@ -33,27 +33,32 @@ const Sidebar = () => {
       <h2>SMS</h2>
 
       <ul>
-        {(user?.role === "ADMIN" || user?.role === "TEACHER" )  && (
+        {user?.role === "STUDENT" && (
+          <li>
+            <Link to="/my-details">My Details</Link>
+          </li>
+        )}
+        {(user?.role === "ADMIN" || user?.role === "TEACHER") && (
           <li>
             <Link to="/dashboard">  Dashboard</Link>
           </li>
         )}
 
         {(user?.role === "ADMIN" || user?.role === "TEACHER") && (
-        <li>
-          <Link to="/students">student</Link>
-        </li>
+          <li>
+            <Link to="/students">student</Link>
+          </li>
         )}
-        {user?.role==="ADMIN"  && (
+        {user?.role === "ADMIN" && (
 
           <li>
-          <Link to="/teachers"> Teachers</Link>
-        </li>
-        )} 
-        {user?.role==="ADMIN"  && (
-        <li>
-          <Link to="/users"> Users</Link>
-        </li>
+            <Link to="/teachers"> Teachers</Link>
+          </li>
+        )}
+        {user?.role === "ADMIN" && (
+          <li>
+            <Link to="/users"> Users</Link>
+          </li>
         )}
 
         <li>

@@ -1,8 +1,9 @@
 package com.nitesh.student.Services;
 
 import com.nitesh.student.Entity.StudentEntity;
+import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Repository.StudentRepository;
-import org.bson.types.ObjectId;
+import com.nitesh.student.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,20 +12,56 @@ import java.util.Optional;
 
 @Component
 public class StudentServices {
+
     @Autowired
-    private StudentRepository StudentRepo;
+    private StudentRepository studentRepo;
 
-    public void saveStudent(StudentEntity studentEntity){
-        StudentRepo.save(studentEntity);
+    @Autowired
+    private UserRepository userRepo;
+
+
+    // Save student
+    public void saveStudent(StudentEntity studentEntity) {
+        studentRepo.save(studentEntity);
     }
 
-    public List<StudentEntity> getAllStudent(){
-    return StudentRepo.findAll();
+
+    // Get all students
+    public List<StudentEntity> getAllStudent() {
+        return studentRepo.findAll();
     }
-    public Optional<StudentEntity> findById(String id){
-      return   StudentRepo.findById(id);
+
+
+    // Find student by ID
+    public Optional<StudentEntity> findById(String id) {
+        return studentRepo.findById(id);
     }
-    public void  deleteById(String id){
-        StudentRepo.deleteById(id);
+
+
+    // Delete student by ID
+    public void deleteById(String id) {
+        studentRepo.deleteById(id);
+    }
+
+
+    // Get details of the currently logged-in student
+    public StudentEntity getMyStudent(String username) {
+
+        UserEntity user = userRepo.findByUserName(username);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        if (!"STUDENT".equals(user.getRole())) {
+            throw new RuntimeException("User is not a student");
+        }
+
+        if (user.getStudentId() == null) {
+            throw new RuntimeException("No student profile linked to this account");
+        }
+
+        return studentRepo.findById(user.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student profile not found"));
     }
 }

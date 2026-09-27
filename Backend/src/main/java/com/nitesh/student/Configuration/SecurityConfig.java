@@ -1,4 +1,5 @@
 package com.nitesh.student.Configuration;
+
 import com.nitesh.student.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,60 +24,168 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final JwtFilter jwtFilter;
-    public SecurityConfig(JwtFilter jwtFilter){
+
+    public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                .cors(cors -> {
-                })
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/public/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/current").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/student_data/**").hasAnyRole("ADMIN", "TEACHER", "STUDENT")
-                        .requestMatchers(HttpMethod.POST, "/student_data/**").hasAnyRole("ADMIN", "TEACHER")
-                        .requestMatchers(HttpMethod.PUT, "/student_data/**").hasAnyRole("ADMIN", "TEACHER")
-                        .requestMatchers(HttpMethod.DELETE, "/student_data/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/teacher_data/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+
+                        // =========================
+                        // PUBLIC
+                        // =========================
+                        .requestMatchers(HttpMethod.POST, "/public/**")
+                        .permitAll()
+
+
+                        // =========================
+                        // CURRENT USER
+                        // =========================
+                        .requestMatchers(HttpMethod.GET, "/user/current")
+                        .authenticated()
+
+
+                        // =========================
+                        // STUDENT - OWN DETAILS
+                        // IMPORTANT: BEFORE /student_data/**
+                        // =========================
+                        .requestMatchers(HttpMethod.GET, "/student_data/me")
+                        .hasRole("STUDENT")
+
+
+                        // =========================
+                        // STUDENT DATA
+                        // ADMIN + TEACHER can view
+                        // =========================
+                        .requestMatchers(HttpMethod.GET, "/student_data/**")
+                        .hasAnyRole("ADMIN", "TEACHER")
+
+
+                        // =========================
+                        // CREATE STUDENT
+                        // =========================
+                        .requestMatchers(HttpMethod.POST, "/student_data/**")
+                        .hasAnyRole("ADMIN", "TEACHER")
+
+
+                        // =========================
+                        // UPDATE STUDENT
+                        // =========================
+                        .requestMatchers(HttpMethod.PUT, "/student_data/**")
+                        .hasAnyRole("ADMIN", "TEACHER")
+
+
+                        // =========================
+                        // DELETE STUDENT
+                        // =========================
+                        .requestMatchers(HttpMethod.DELETE, "/student_data/**")
+                        .hasRole("ADMIN")
+
+
+                        // =========================
+                        // TEACHER DATA
+                        // =========================
+                        .requestMatchers("/teacher_data/**")
+                        .hasRole("ADMIN")
+
+
+                        // =========================
+                        // USER MANAGEMENT
+                        // =========================
+                        .requestMatchers("/user/**")
+                        .hasRole("ADMIN")
+
+
+                        // =========================
+                        // EVERYTHING ELSE
+                        // =========================
+                        .anyRequest()
+                        .authenticated()
+                )
+
+                // JWT filter
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 );
-        http.addFilterBefore(jwtFilter,
-                UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    public AuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService) {
+
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userDetailsService);
+
         provider.setPasswordEncoder(passwordEncoder());
+
         return provider;
     }
+
+
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration)
+            throws Exception {
+
         return configuration.getAuthenticationManager();
     }
+
+
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("POST", "GET", "put", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
+        CorsConfiguration configuration =
+                new CorsConfiguration();
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:5173")
+        );
+
+        configuration.setAllowedMethods(
+                List.of(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
+        );
+
+        configuration.setAllowedHeaders(
+                List.of("*")
+        );
+
         configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration(
+                "/**",
+                configuration
+        );
+
         return source;
     }
 }

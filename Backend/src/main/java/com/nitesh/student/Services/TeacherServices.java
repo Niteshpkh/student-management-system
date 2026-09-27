@@ -2,33 +2,73 @@ package com.nitesh.student.Services;
 
 import com.nitesh.student.Entity.TeacherEntity;
 import com.nitesh.student.Repository.TeacherRepository;
+import com.nitesh.student.dtos.TeacherRequestDTO;
+import com.nitesh.student.dtos.TeacherResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class TeacherServices {
-    @Autowired
-    public TeacherRepository TeacherRepo;
+    private final TeacherRepository teacherRepository;
 
-    public void saveTeacher(TeacherEntity teacherEntity){
-        TeacherRepo.save(teacherEntity);
+    public List<TeacherResponseDTO> getAllTeachers(){
+        return teacherRepository.findAll()
+                .stream()
+                .map(TeacherResponseDTO::fromEntity)
+                .toList();
     }
 
-    public List<TeacherEntity> getAllTeacher(){
-      return   TeacherRepo.findAll();
+    public Optional<TeacherResponseDTO> getTeacherById(ObjectId id) {
+        return teacherRepository.findById(id)
+                .map(TeacherResponseDTO::fromEntity);
     }
 
-    public Optional<TeacherEntity> getTeacherById(ObjectId id){
-        return TeacherRepo.findById(id);
+    public TeacherResponseDTO createTeacher(TeacherRequestDTO dto) {
+        TeacherEntity entity = mapToEntity(dto);
+        TeacherEntity savedEntity = teacherRepository.save(entity);
+        return TeacherResponseDTO.fromEntity(savedEntity);
     }
 
-    public void deleteById(ObjectId id){
-        TeacherRepo.deleteById(id);
+    public Optional<TeacherResponseDTO> updateTeacher(ObjectId id, TeacherRequestDTO dto) {
+        return teacherRepository.findById(id).map(existingTeacher -> {
+            applyUpdates(existingTeacher, dto);
+            // Explicitly call save to persist mutations back to MongoDB
+            TeacherEntity updatedEntity = teacherRepository.save(existingTeacher);
+            return TeacherResponseDTO.fromEntity(updatedEntity);
+        });
     }
+
+    public boolean deleteTeacher(ObjectId id) {
+        if (!teacherRepository.existsById(id)) {
+            return false;
+        }
+        teacherRepository.deleteById(id);
+        return true;
+    }
+
+    private TeacherEntity mapToEntity(TeacherRequestDTO dto) {
+        return TeacherEntity.builder()
+                .teachers_name(dto.getTeachers_name())
+                .email(dto.getEmail())
+                .qualification(dto.getQualification())
+                .teacher_phone_no(dto.getTeacher_phone_no())
+                .Subject(dto.getSubject())
+                .build();
+    }
+
+    private void applyUpdates(TeacherEntity entity, TeacherRequestDTO dto) {
+        entity.setTeachers_name(dto.getTeachers_name());
+        entity.setEmail(dto.getEmail());
+        entity.setQualification(dto.getQualification());
+        entity.setTeacher_phone_no(dto.getTeacher_phone_no());
+        entity.setSubject(dto.getSubject());
+    }
+
 
 
 }

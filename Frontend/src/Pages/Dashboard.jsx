@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatCard from "../Components/StatCard";
 import axios from "axios";
+import api from "../../api/axios";
 
 const Dashboard = () => {
   const [students, setStudents] = useState([]);
@@ -36,11 +37,34 @@ const Dashboard = () => {
     }
   ];
 
-  useEffect(() => {
-    getData("http://localhost:8080/student_data", setStudents);
-    getData("http://localhost:8080/user", setUsers);
-    getData("http://localhost:8080/teacher", setTeachers);
-  }, []);
+useEffect(() => {
+    api.get("/user/current")
+        .then(response => {
+            const role = response.data.role;
+
+            switch (role) {
+                case "ADMIN":
+                    getData("/student_data", setStudents);
+                    getData("/user", setUsers);
+                    getData("/teacher_data", setTeachers);
+                    break;
+
+                case "TEACHER":
+                    getData("/student_data", setStudents);
+                    break;
+
+                case "STUDENT":
+                    getData("/student/me", setStudents);
+                    break;
+
+                default:
+                    console.log("Unknown role:", role);
+            }
+        })
+        .catch(error => {
+            console.log("Failed to get current user:", error);
+        });
+}, []);
 
   const navigate = useNavigate();
 

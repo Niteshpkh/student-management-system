@@ -1,9 +1,11 @@
 package com.nitesh.student.Controller;
 import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Services.StudentServices;
+import com.nitesh.student.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public class StudentController {
 
     @Autowired
     private StudentServices studentService;
+
+    @Autowired
+    private UserServices userService;
 
     // Save Student
     @PostMapping
@@ -89,5 +94,18 @@ public class StudentController {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyDetails(Authentication authentication) {
+
+        String username = authentication.getName();
+
+        StudentEntity student = studentService.getMyStudent(username);
+
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(student);
     }
 }

@@ -19,5 +19,5 @@ public class UserEntity {
     private String userName;
     private String password;
     private String role;
-     private  List<StudentEntity> studentEntities = new ArrayList<>();
+     private  String studentId;
 }

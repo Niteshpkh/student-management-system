@@ -10,6 +10,7 @@ import SignIn from "./Pages/SignIn";
 import Layout from "./Layout/Layout";
 import User from "./Pages/User";
 import ProtectedRoute from "./ProtectedRoute";
+import MyStudentDetails from "./Components/MyStudentDetails";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/users" element = {<User/>}/>
+      <Route path="/my-details" element={<MyStudentDetails />} />
       </Route>
       </Route>
     </Routes>
