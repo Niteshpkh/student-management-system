@@ -14,9 +14,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TeacherServices {
+
     private final TeacherRepository teacherRepository;
 
-    public List<TeacherResponseDTO> getAllTeachers(){
+    public List<TeacherResponseDTO> getAllTeachers() {
         return teacherRepository.findAll()
                 .stream()
                 .map(TeacherResponseDTO::fromEntity)
@@ -37,7 +38,6 @@ public class TeacherServices {
     public Optional<TeacherResponseDTO> updateTeacher(ObjectId id, TeacherRequestDTO dto) {
         return teacherRepository.findById(id).map(existingTeacher -> {
             applyUpdates(existingTeacher, dto);
-            // Explicitly call save to persist mutations back to MongoDB
             TeacherEntity updatedEntity = teacherRepository.save(existingTeacher);
             return TeacherResponseDTO.fromEntity(updatedEntity);
         });
@@ -57,18 +57,25 @@ public class TeacherServices {
                 .email(dto.getEmail())
                 .qualification(dto.getQualification())
                 .teacher_phone_no(dto.getTeacher_phone_no())
-                .Subject(dto.getSubject())
+                .subject(dto.getSubject())
                 .build();
     }
 
     private void applyUpdates(TeacherEntity entity, TeacherRequestDTO dto) {
-        entity.setTeachers_name(dto.getTeachers_name());
-        entity.setEmail(dto.getEmail());
-        entity.setQualification(dto.getQualification());
-        entity.setTeacher_phone_no(dto.getTeacher_phone_no());
-        entity.setSubject(dto.getSubject());
+        if (dto.getTeachers_name() != null) {
+            entity.setTeachers_name(dto.getTeachers_name());
+        }
+        if (dto.getEmail() != null) {
+            entity.setEmail(dto.getEmail());
+        }
+        if (dto.getQualification() != null) {
+            entity.setQualification(dto.getQualification());
+        }
+        if (dto.getTeacher_phone_no() != null) {
+            entity.setTeacher_phone_no(dto.getTeacher_phone_no());
+        }
+        if (dto.getSubject() != null) {
+            entity.setSubject(dto.getSubject());
+        }
     }
-
-
-
 }
