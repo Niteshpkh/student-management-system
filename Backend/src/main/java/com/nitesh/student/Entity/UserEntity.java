@@ -1,23 +1,25 @@
 package com.nitesh.student.Entity;
 
+import com.nitesh.student.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Document(collection = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class UserEntity {
     @Id
     private String id;
     private String userName;
     private String password;
-    private String role;
+    private Role role;
      private  String studentId;
+     private String teacherId;
+
 }
