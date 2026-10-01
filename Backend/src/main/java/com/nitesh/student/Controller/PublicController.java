@@ -1,7 +1,7 @@
 package com.nitesh.student.Controller;
 import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.JavaUtils.JwtUtils;
-import com.nitesh.student.Services.UserServices;
+import com.nitesh.student.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/public")
 public class PublicController {
     @Autowired
-    private UserServices userService;
+    private UserService userService;
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired

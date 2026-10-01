@@ -1,7 +1,7 @@
 package com.nitesh.student.Controller;
 import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Services.StudentServices;
-import com.nitesh.student.Services.UserServices;
+import com.nitesh.student.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class StudentController {
     private StudentServices studentService;
 
     @Autowired
-    private UserServices userService;
+    private UserService userService;
 
     // Save Student
     @PostMapping

@@ -1,7 +1,9 @@
 package com.nitesh.student.Controller;
 
 import com.nitesh.student.Entity.UserEntity;
-import com.nitesh.student.Services.UserServices;
+import com.nitesh.student.Services.UserService;
+import com.nitesh.student.dtos.UserRequestDTO;
+import com.nitesh.student.dtos.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,73 +15,66 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins =  "http://localhost:5173, http://localhost:5174")
-
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class UserController {
 
     @Autowired
-    private UserServices userService;
+    private UserService userService;
 
+    // 1. Create User
+    @PostMapping
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO createdUser = userService.createUser(userRequestDTO);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    // 2. Get All Users (Returns List<UserResponseDTO> matching userService.getAllUsers())
     @GetMapping
-    public List<UserEntity> getUser(){
-        return userService.getAllUser();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-
-
+    // 3. Get User By ID (Matches findByUserId returning Optional<UserResponseDTO>)
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id){
-        Optional<UserEntity> user = userService.findByUserId(id);
-        if(user.isPresent()){
-            return new ResponseEntity<>(user.get() ,HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
+        Optional<UserResponseDTO> user = userService.findByUserId(id);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping ("/id/{id}")
-    public  ResponseEntity<?> deleteUserById(@PathVariable String id){
-        userService.deleteByUserId(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping ("/UserName/{UserName}")
-    public ResponseEntity<?> getUserByUserName (@PathVariable String UserName){
-       Optional<UserEntity> user = Optional.ofNullable(userService.findByUserName(UserName));
-       if(user.isPresent()){
-           return  new ResponseEntity<>(user.get(), HttpStatus.OK);
-       }
-       else  {
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       }
-
-    }
+    // 4. Update User (Matches updateUser(UserRequestDTO, String) which hashes passwords & saves in service)
     @PutMapping("/id/{id}")
-    public ResponseEntity<?> updateUserById(@RequestBody UserEntity newUser, @PathVariable String id){
-        Optional<UserEntity> oldUser = userService.findByUserId(id);
-        if(oldUser.isPresent()){
-            UserEntity user = oldUser.get();
-            if(newUser.getRole()!=null){
-            user.setRole(newUser.getRole());
-            }
-            if(newUser.getUserName()!=null) {
-                user.setUserName(newUser.getUserName());
-            }
-            if(newUser.getPassword()!=null) {
-                user.setPassword(newUser.getPassword());
-            }
-            userService.saveUser(user);
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserRequestDTO newUser, @PathVariable String id) {
+        UserEntity updatedUser = userService.updateUser(newUser, id);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(UserResponseDTO.fromEntity(updatedUser));
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.notFound().build();
     }
 
+    // 5. Delete User (Matches deleteUser(id) which returns boolean)
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+        boolean deleted = userService.deleteUser(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
+    // 6. Get Current Authenticated User
     @GetMapping("/current")
-    public UserEntity getCurrentUser(Authentication authentication){
+    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String userName = authentication.getName();
-        return userService.getCurrentUser(userName);
+        // Since findByUserId expects an ID or you look up by username:
+        return userService.getAllUsers().stream()
+                .filter(u -> userName.equals(u.getUserName()))
+                .findFirst()
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
 }

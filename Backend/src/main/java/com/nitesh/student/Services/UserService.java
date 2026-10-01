@@ -45,4 +45,44 @@ public class UserService {
       return userRepository.findById(id)
                .map(UserResponseDTO::fromEntity);
     }
+
+    public boolean deleteUser(String id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public UserEntity updateUser(UserRequestDTO updatedUser , String id){
+        return userRepository.findById(id)
+                .map(existingUser-> {
+                    if (updatedUser.getUserName() != null && !updatedUser.getUserName().isBlank()){
+                        existingUser.setUserName(updatedUser.getUserName().trim());
+                    }
+                    if (updatedUser.getRole() != null ) {
+                        existingUser.setRole(updatedUser.getRole());
+                    }
+                    // Hash new password if provided
+                    if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+                        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                    }
+                    if(updatedUser.getStudentId() != null && !updatedUser.getStudentId().isBlank()) {
+                        existingUser.setStudentId(updatedUser.getStudentId());
+                    }
+                        else {
+                            existingUser.setStudentId(null);
+                        }
+
+                    if(updatedUser.getTeacherId() != null && !updatedUser.getTeacherId().isBlank()) {
+                        existingUser.setTeacherId(updatedUser.getTeacherId());
+                    }
+                    else {
+                        existingUser.setTeacherId(null);
+                    }
+                    // Save and return the updated entity
+                    return userRepository.save(existingUser);
+                })
+                .orElse(null); // Return null so the controller can return 404
+    }
 }
