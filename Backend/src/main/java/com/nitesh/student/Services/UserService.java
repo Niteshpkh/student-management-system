@@ -4,24 +4,21 @@ import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Repository.UserRepository;
 import com.nitesh.student.dtos.UserRequestDTO;
 import com.nitesh.student.dtos.UserResponseDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-    private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
 
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO){
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         UserEntity userEntity = UserEntity.builder()
                 .userName(userRequestDTO.getUserName())
                 .password(passwordEncoder.encode(userRequestDTO.getPassword()))
@@ -30,20 +27,25 @@ public class UserService {
                 .teacherId(userRequestDTO.getTeacherId())
                 .build();
 
-        UserEntity savedUser = userRepository.save((userEntity));
-                return UserResponseDTO.fromEntity(savedUser);
+        UserEntity savedUser = userRepository.save(userEntity);
+        return UserResponseDTO.fromEntity(savedUser);
     }
 
-    public List <UserResponseDTO> getAllUsers(){
-        return  userRepository.findAll()
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
                 .stream()
                 .map(UserResponseDTO::fromEntity)
                 .toList();
     }
 
-    public Optional <UserResponseDTO> findByUserId( String id){
-      return userRepository.findById(id)
-               .map(UserResponseDTO::fromEntity);
+    public Optional<UserResponseDTO> findByUserId(String id) {
+        return userRepository.findById(id)
+                .map(UserResponseDTO::fromEntity);
+    }
+
+    public Optional<UserResponseDTO> findByUserName(String userName) {
+        UserEntity user = userRepository.findByUserName(userName);
+        return Optional.ofNullable(user).map(UserResponseDTO::fromEntity);
     }
 
     public boolean deleteUser(String id) {
@@ -54,35 +56,32 @@ public class UserService {
         return false;
     }
 
-    public UserEntity updateUser(UserRequestDTO updatedUser , String id){
+    public Optional<UserResponseDTO> updateUser(UserRequestDTO updatedUser, String id) {
         return userRepository.findById(id)
-                .map(existingUser-> {
-                    if (updatedUser.getUserName() != null && !updatedUser.getUserName().isBlank()){
+                .map(existingUser -> {
+                    if (updatedUser.getUserName() != null && !updatedUser.getUserName().isBlank()) {
                         existingUser.setUserName(updatedUser.getUserName().trim());
                     }
-                    if (updatedUser.getRole() != null ) {
+                    if (updatedUser.getRole() != null) {
                         existingUser.setRole(updatedUser.getRole());
                     }
-                    // Hash new password if provided
                     if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
                         existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                     }
-                    if(updatedUser.getStudentId() != null && !updatedUser.getStudentId().isBlank()) {
+                    if (updatedUser.getStudentId() != null && !updatedUser.getStudentId().isBlank()) {
                         existingUser.setStudentId(updatedUser.getStudentId());
+                    } else {
+                        existingUser.setStudentId(null);
                     }
-                        else {
-                            existingUser.setStudentId(null);
-                        }
 
-                    if(updatedUser.getTeacherId() != null && !updatedUser.getTeacherId().isBlank()) {
+                    if (updatedUser.getTeacherId() != null && !updatedUser.getTeacherId().isBlank()) {
                         existingUser.setTeacherId(updatedUser.getTeacherId());
-                    }
-                    else {
+                    } else {
                         existingUser.setTeacherId(null);
                     }
-                    // Save and return the updated entity
-                    return userRepository.save(existingUser);
-                })
-                .orElse(null); // Return null so the controller can return 404
+
+                    UserEntity saved = userRepository.save(existingUser);
+                    return UserResponseDTO.fromEntity(saved);
+                });
     }
 }

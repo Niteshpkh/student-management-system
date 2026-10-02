@@ -1,10 +1,9 @@
 package com.nitesh.student.Controller;
 
-import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Services.UserService;
 import com.nitesh.student.dtos.UserRequestDTO;
 import com.nitesh.student.dtos.UserResponseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,10 +15,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     // 1. Create User
     @PostMapping
@@ -28,14 +27,14 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    // 2. Get All Users (Returns List<UserResponseDTO> matching userService.getAllUsers())
+    // 2. Get All Users
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    // 3. Get User By ID (Matches findByUserId returning Optional<UserResponseDTO>)
+    // 3. Get User By ID
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
         Optional<UserResponseDTO> user = userService.findByUserId(id);
@@ -43,17 +42,15 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 4. Update User (Matches updateUser(UserRequestDTO, String) which hashes passwords & saves in service)
+    // 4. Update User
     @PutMapping("/id/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserRequestDTO newUser, @PathVariable String id) {
-        UserEntity updatedUser = userService.updateUser(newUser, id);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(UserResponseDTO.fromEntity(updatedUser));
-        }
-        return ResponseEntity.notFound().build();
+        Optional<UserResponseDTO> updatedUser = userService.updateUser(newUser, id);
+        return updatedUser.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 5. Delete User (Matches deleteUser(id) which returns boolean)
+    // 5. Delete User
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         boolean deleted = userService.deleteUser(id);
@@ -69,11 +66,7 @@ public class UserController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String userName = authentication.getName();
-        // Since findByUserId expects an ID or you look up by username:
-        return userService.getAllUsers().stream()
-                .filter(u -> userName.equals(u.getUserName()))
-                .findFirst()
+        return userService.findByUserName(authentication.getName())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
