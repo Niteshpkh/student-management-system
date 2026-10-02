@@ -1,8 +1,11 @@
 package com.nitesh.student.Controller;
-import com.nitesh.student.Entity.UserEntity;
+
 import com.nitesh.student.JavaUtils.JwtUtils;
 import com.nitesh.student.Services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nitesh.student.dtos.UserRequestDTO;
+import com.nitesh.student.dtos.UserResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -17,41 +20,46 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/public")
+@RequiredArgsConstructor
 public class PublicController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtUtils jwtUtils;
+
+    private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserEntity user) {
+    public ResponseEntity<?> authenticateUser(@RequestBody UserRequestDTO loginRequest) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    user.getUserName(), user.getPassword()));
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUserName(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUserName());
             String jwt = jwtUtils.generateToken(userDetails.getUsername());
 
             ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(false) // Set to true in production with HTTPS
                     .path("/")
                     .maxAge(60 * 60)
                     .sameSite("Lax")
                     .build();
+
             return ResponseEntity.ok()
-                    .header("Set-Cookie", cookie.toString())
-                    .build();
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body("Login successful");
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> saveUser(@RequestBody UserEntity user){
-        userService.saveUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO createdUser = userService.createUser(userRequestDTO);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 }
