@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,5 +78,12 @@ public class TeacherServices {
         if (dto.getSubject() != null) {
             entity.setSubject(dto.getSubject());
         }
+    }
+
+    public TeacherResponseDTO updateTeacherBySubject(ObjectId id, TeacherRequestDTO teacherRequestDTO){
+      TeacherEntity teacherEntity =  teacherRepository.findById(id).orElseThrow(()->new RuntimeException("Teacher is not found with the id" + id));
+      teacherEntity.setSubject(teacherRequestDTO.getSubject());
+      TeacherEntity savedTeacher = teacherRepository.save(teacherEntity);
+      return TeacherResponseDTO.fromEntity(savedTeacher);
     }
 }

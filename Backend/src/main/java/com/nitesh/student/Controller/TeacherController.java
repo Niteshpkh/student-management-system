@@ -55,4 +55,11 @@ public class TeacherController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PatchMapping("/{id}/subject")
+    public ResponseEntity<TeacherResponseDTO> updateTeacherBySubject(@RequestBody TeacherRequestDTO dto, @PathVariable ObjectId id){
+       TeacherResponseDTO responseDTO =  teacherServices.updateTeacherBySubject(id, dto);
+       return ResponseEntity.ok(responseDTO);
+
+    }
 }
