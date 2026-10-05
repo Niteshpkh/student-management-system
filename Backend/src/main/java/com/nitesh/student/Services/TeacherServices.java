@@ -7,6 +7,7 @@ import com.nitesh.student.dtos.TeacherResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -81,7 +82,7 @@ public class TeacherServices {
     }
 
     public TeacherResponseDTO updateTeacherBySubject(ObjectId id, TeacherRequestDTO teacherRequestDTO){
-      TeacherEntity teacherEntity =  teacherRepository.findById(id).orElseThrow(()->new RuntimeException("Teacher is not found with the id" + id));
+      TeacherEntity teacherEntity =  teacherRepository.findById(id).orElseThrow(()->new ResourceAccessException("Teacher is not found with the id" + id));
       teacherEntity.setSubject(teacherRequestDTO.getSubject());
       TeacherEntity savedTeacher = teacherRepository.save(teacherEntity);
       return TeacherResponseDTO.fromEntity(savedTeacher);

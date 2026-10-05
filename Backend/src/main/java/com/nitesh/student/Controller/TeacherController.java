@@ -3,6 +3,7 @@ package com.nitesh.student.Controller;
 import com.nitesh.student.Services.TeacherServices;
 import com.nitesh.student.dtos.TeacherRequestDTO;
 import com.nitesh.student.dtos.TeacherResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class TeacherController {
     private final TeacherServices teacherServices;
 
     @PostMapping
-    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody TeacherRequestDTO teacherRequestDTO) {
+    public ResponseEntity<TeacherResponseDTO> createTeacher( @Valid @RequestBody TeacherRequestDTO teacherRequestDTO) {
         TeacherResponseDTO response = teacherServices.createTeacher(teacherRequestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -31,14 +32,14 @@ public class TeacherController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<TeacherResponseDTO> findByTeacherId(@PathVariable ObjectId id) {
+    public ResponseEntity<TeacherResponseDTO> findByTeacherId( @PathVariable ObjectId id) {
         return teacherServices.getTeacherById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping("/id/{id}")
-    public ResponseEntity<TeacherResponseDTO> updateTeacherById(
+    public ResponseEntity<TeacherResponseDTO> updateTeacherById( @Valid
             @PathVariable ObjectId id,
             @RequestBody TeacherRequestDTO teacherRequestDTO) {
 
@@ -48,7 +49,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteTeacherById(@PathVariable ObjectId id) {
+    public ResponseEntity<Void> deleteTeacherById(@Valid @PathVariable ObjectId id) {
         boolean deleted = teacherServices.deleteTeacher(id);
         if (deleted) {
             return ResponseEntity.noContent().build();
@@ -57,7 +58,7 @@ public class TeacherController {
     }
 
     @PatchMapping("/{id}/subject")
-    public ResponseEntity<TeacherResponseDTO> updateTeacherBySubject(@RequestBody TeacherRequestDTO dto, @PathVariable ObjectId id){
+    public ResponseEntity<TeacherResponseDTO> updateTeacherBySubject(@Valid @RequestBody TeacherRequestDTO dto, @PathVariable ObjectId id){
        TeacherResponseDTO responseDTO =  teacherServices.updateTeacherBySubject(id, dto);
        return ResponseEntity.ok(responseDTO);
 
