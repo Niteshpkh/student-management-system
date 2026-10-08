@@ -1,8 +1,6 @@
 package com.nitesh.student.Controller;
 
-import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.JavaUtils.JwtUtils;
-import com.nitesh.student.Repository.UserRepository;
 import com.nitesh.student.Services.UserService;
 import com.nitesh.student.dtos.UserRequestDTO;
 import com.nitesh.student.dtos.UserResponseDTO;
@@ -16,13 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/public")
@@ -33,27 +30,11 @@ public class PublicController {
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser( @RequestBody UserRequestDTO loginRequest) {
-        System.out.println(">>> Incoming Login Username: [" + loginRequest.getUserName() + "]");
-        System.out.println(">>> Incoming Login Password: [" + loginRequest.getPassword() + "]");
-
-        Optional<UserEntity> userOpt = Optional.ofNullable(userRepository.findByUserName(loginRequest.getUserName()));
-
-        if (userOpt.isEmpty()) {
-            System.out.println(">>> FAIL: User was NOT found in MongoDB!");
-        } else {
-            UserEntity user = userOpt.get();
-            System.out.println(">>> SUCCESS: User found in MongoDB: " + user.getUserName());
-            System.out.println(">>> Stored Hash: [" + user.getPassword() + "]");
-
-            boolean matches = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
-            System.out.println(">>> Does BCrypt match raw password? " + matches);
-        }
+    public ResponseEntity<?> authenticateUser(@RequestBody UserRequestDTO loginRequest) {
         try {
+            // 1. Authenticate user credentials
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUserName(),
@@ -61,27 +42,40 @@ public class PublicController {
                     )
             );
 
+            // 2. Fetch UserDetails and generate JWT token
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUserName());
             String jwt = jwtUtils.generateToken(userDetails.getUsername());
 
+            // 3. Create HTTP-only cookie for secure browser clients
             ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
                     .httpOnly(true)
                     .secure(false) // Set to true in production with HTTPS
                     .path("/")
-                    .maxAge(60 * 60)
+                    .maxAge(60 * 60) // 1 hour expiration
                     .sameSite("Lax")
                     .build();
 
+            // 4. Return token in both Set-Cookie header and JSON response body
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .body("Login successful");
+                    .body(Map.of(
+                            "message", "Login successful",
+                            "token", jwt,
+                            "username", userDetails.getUsername()
+                    ));
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "status", HttpStatus.UNAUTHORIZED.value(),
+                            "error", "Unauthorized",
+                            "message", "Invalid username or password"
+                    ));
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO createdUser = userService.createUser(userRequestDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
