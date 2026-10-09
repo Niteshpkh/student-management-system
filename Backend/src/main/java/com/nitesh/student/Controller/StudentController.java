@@ -3,12 +3,15 @@ import com.nitesh.student.Entity.StudentEntity;
 import com.nitesh.student.Services.StudentServices;
 import com.nitesh.student.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,9 +34,25 @@ public class StudentController {
 
 
     @GetMapping
-    public ResponseEntity<List<StudentEntity>> getAllStudents() {
-        List<StudentEntity> students = studentService.getAllStudent();
-        return ResponseEntity.ok(students);
+    public ResponseEntity <?> getAllStudents(@RequestParam (defaultValue = "0") int Page,
+                                             @RequestParam (defaultValue = "10") int Size,
+                                             @RequestParam (defaultValue = "name") String sortBy,
+                                             @RequestParam(defaultValue = "asc") String direction,
+                                             @RequestParam(required = false) String search
+    ) {
+        Page<StudentEntity> studentPage = studentService.getStudents(page, size, sortBy, direction, search);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("students", studentPage.getContent());
+        response.put("currentPage", studentPage.getNumber());
+        response.put("totalElements", studentPage.getTotalElements());
+        response.put("totalPages", studentPage.getTotalPages());
+        response.put("pageSize", studentPage.getSize());
+        response.put("hasNext", studentPage.hasNext());
+        response.put("hasPrevious", studentPage.hasPrevious());
+
+        return ResponseEntity.ok(response);
+    }
     }
 
     // Get Student By Id

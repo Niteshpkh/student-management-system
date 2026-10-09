@@ -5,6 +5,10 @@ import com.nitesh.student.Entity.UserEntity;
 import com.nitesh.student.Repository.StudentRepository;
 import com.nitesh.student.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -63,5 +67,18 @@ public class StudentServices {
 
         return studentRepo.findById(user.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student profile not found"));
+    }
+
+    public Page<StudentEntity> getStudents(int page, int size, String sortBy, String direction, String search ){
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        if (search!= null && !search.trim().isEmpty()){
+            return studentRepo.findByNameContainingIgnoreCase(search.trim(), pageable);
+        }
+        return studentRepo.findAll(pageable);
     }
 }
