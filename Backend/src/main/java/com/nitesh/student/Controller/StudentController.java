@@ -1,6 +1,7 @@
 package com.nitesh.student.Controller;
+
 import com.nitesh.student.Entity.StudentEntity;
-import com.nitesh.student.Services.StudentServices;
+import com.nitesh.student.Services.StudentService;
 import com.nitesh.student.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,29 +20,36 @@ import java.util.Optional;
 public class StudentController {
 
     @Autowired
-    private StudentServices studentService;
+    private StudentService studentService;
 
     @Autowired
     private UserService userService;
 
     // Save Student
     @PostMapping
-    public ResponseEntity<?> saveStudent(@RequestBody StudentEntity studentEntity) {
+    public ResponseEntity<?> saveStudent(
+            @RequestBody StudentEntity studentEntity) {
+
         studentService.saveStudent(studentEntity);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
+    // Get All Students with Pagination, Search and Sorting
     @GetMapping
-    public ResponseEntity <?> getAllStudents(@RequestParam (defaultValue = "0") int Page,
-                                             @RequestParam (defaultValue = "10") int Size,
-                                             @RequestParam (defaultValue = "name") String sortBy,
-                                             @RequestParam(defaultValue = "asc") String direction,
-                                             @RequestParam(required = false) String search
-    ) {
-        Page<StudentEntity> studentPage = studentService.getStudents(page, size, sortBy, direction, search);
+    public ResponseEntity<?> getAllStudents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String search) {
+
+        Page<StudentEntity> studentPage =
+                studentService.getStudents(
+                        page, size, sortBy, direction, search);
 
         Map<String, Object> response = new HashMap<>();
+
         response.put("students", studentPage.getContent());
         response.put("currentPage", studentPage.getNumber());
         response.put("totalElements", studentPage.getTotalElements());
@@ -53,16 +60,16 @@ public class StudentController {
 
         return ResponseEntity.ok(response);
     }
-    }
 
-    // Get Student By Id
+    // Get Student By ID
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findById(@PathVariable String id) {
 
         Optional<StudentEntity> student = studentService.findById(id);
 
         if (student.isPresent()) {
-            return new ResponseEntity<>(student.get(), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    student.get(), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -83,29 +90,38 @@ public class StudentController {
             @PathVariable String id,
             @RequestBody StudentEntity newEntry) {
 
-        StudentEntity old = studentService.findById(id).orElse(null);
+        StudentEntity old =
+                studentService.findById(id).orElse(null);
 
         if (old != null) {
 
-            old.setName(newEntry.getName() != null && !newEntry.getName().isBlank()
-                    ? newEntry.getName()
-                    : old.getName());
+            old.setName(
+                    newEntry.getName() != null
+                            && !newEntry.getName().isBlank()
+                            ? newEntry.getName()
+                            : old.getName());
 
-            old.setAge(newEntry.getAge() != null
-                    ? newEntry.getAge()
-                    : old.getAge());
+            old.setAge(
+                    newEntry.getAge() != null
+                            ? newEntry.getAge()
+                            : old.getAge());
 
-            old.setGrade(newEntry.getGrade() != null && !newEntry.getGrade().isBlank()
-                    ? newEntry.getGrade()
-                    : old.getGrade());
+            old.setGrade(
+                    newEntry.getGrade() != null
+                            && !newEntry.getGrade().isBlank()
+                            ? newEntry.getGrade()
+                            : old.getGrade());
 
-            old.setContact_no(newEntry.getContact_no() != null
-                    ? newEntry.getContact_no()
-                    : old.getContact_no());
+            old.setContact_no(
+                    newEntry.getContact_no() != null
+                            ? newEntry.getContact_no()
+                            : old.getContact_no());
 
-            old.setParents_name(newEntry.getParents_name() != null && !newEntry.getParents_name().isBlank()
-                    ? newEntry.getParents_name()
-                    : old.getParents_name());
+            old.setParents_name(
+                    newEntry.getParents_name() != null
+                            && !newEntry.getParents_name().isBlank()
+                            ? newEntry.getParents_name()
+                            : old.getParents_name());
 
             studentService.saveStudent(old);
 
@@ -114,12 +130,21 @@ public class StudentController {
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    // Get Logged-in Student's Details
     @GetMapping("/me")
-    public ResponseEntity<?> getMyDetails(Authentication authentication) {
+    public ResponseEntity<?> getMyDetails(
+            Authentication authentication) {
+
+        if (authentication == null) {
+            return ResponseEntity.status(
+                    HttpStatus.UNAUTHORIZED).build();
+        }
 
         String username = authentication.getName();
 
-        StudentEntity student = studentService.getMyStudent(username);
+        StudentEntity student =
+                studentService.getMyStudent(username);
 
         if (student == null) {
             return ResponseEntity.notFound().build();
@@ -128,3 +153,4 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 }
+
