@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Student.css";
-import axios from "axios";
 import DataTable from "../Components/DataTable";
 import api from "../../api/axios";
 
 const Students = () => {
   const [students, setStudents] = useState([]);
+  const [role, setRole] = useState(null);
   const [student, setStudent] = useState({
     age: "",
     name: "",
@@ -15,19 +15,39 @@ const Students = () => {
   });
 
   const getAllStudents = async () => {
+   const res = await api.get("/student_data");
+
+const studentList = Array.isArray(res.data?.students)
+  ? res.data.students
+  : Array.isArray(res.data)
+  ? res.data
+  : [];
+
+setStudents(studentList);
+  };
+
+  const getMyData = async () => {
     try {
-      const response = await api.get("student_data");
-      setStudents(response.data);
-      console.log(response.data[0]);
-console.log(typeof response.data[0].id);
-console.log(response.data[0].id);
+      const response = await api.get("/student/me");
+      const data = response.data;
+      setStudents(Array.isArray(data) ? data : [data]);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    getAllStudents();
+    api.get("/user/current")
+      .then((res) => {
+        const userRole = res.data.role;
+        setRole(userRole);
+        if (userRole === "STUDENT") {
+          getMyData();
+        } else {
+          getAllStudents();
+        }
+      })
+      .catch((err) => console.error("Failed to get role:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -68,7 +88,7 @@ console.log(response.data[0].id);
     }
 try{
   if(student.id){
-    await api.put(`/student_data/${student.id}`);
+    await api.put(`/student_data/${student.id}`, student);
   }
   else {
     await api.post("/student_data", student);
@@ -90,7 +110,7 @@ catch(error){
 
     console.log(id);
 
-    await axios.delete(`student_data/${id}`);
+   await api.delete(`/student_data/${id}`);
 
     getAllStudents();
 
@@ -101,11 +121,50 @@ const handleEdit = (student) => {
  setStudent(student);
 }
 
+  // Show a loading state while role is being fetched
+  if (role === null) {
+    return <div className="student-container"><p>Loading...</p></div>;
+  }
+
+  // STUDENT: read-only view of their own data
+  if (role === "STUDENT") {
+    return (
+      <div className="student-container">
+        <div className="student-table-container">
+          <h2 className="table-title">My Details</h2>
+          <table className="student-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Grade</th>
+                <th>Parent Name</th>
+                <th>Contact Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((s, index) => (
+                <tr key={index}>
+                  <td>{s.name}</td>
+                  <td>{s.age}</td>
+                  <td>{s.grade}</td>
+                  <td>{s.Parents_name}</td>
+                  <td>{s.contact_no}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
+  // ADMIN / TEACHER: full management view
   return (
     <div className="student-container">
 
       <form className="student-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">Add Student</h2>
+        <h2 className="form-title">{student.id ? "Edit Student" : "Add Student"}</h2>
 
         <label className="form-label">Name</label>
         <input
@@ -157,19 +216,17 @@ const handleEdit = (student) => {
           onChange={handleChange}
         />
 
-        <button className="submit-btn" type="submit"> 
+        <button className="submit-btn" type="submit">
           {student.id ? "Update Student" : "Add Student"}
         </button>
       </form>
 
       <div className="student-table-container">
-
         <h2 className="table-title">
           Student List ({students.length})
         </h2>
 
         <table className="student-table">
-
           <thead>
             <tr>
               <th>Name</th>
@@ -177,33 +234,29 @@ const handleEdit = (student) => {
               <th>Grade</th>
               <th>Parent Name</th>
               <th>Contact Number</th>
-              <th>Action</th>
+              <th>Delete</th>
               <th>Edit</th>
             </tr>
           </thead>
 
           <tbody>
-            {students.map((student, index) => (
+            {students.map((s, index) => (
               <tr key={index}>
-                <td>{student.name}</td>
-                <td>{student.age}</td>
-                <td>{student.grade}</td>
-                <td>{student.Parents_name}</td>
-                <td>{student.contact_no}</td>
-                <td></td>
+                <td>{s.name}</td>
+                <td>{s.age}</td>
+                <td>{s.grade}</td>
+                <td>{s.Parents_name}</td>
+                <td>{s.contact_no}</td>
                 <td>
-                  <button onClick={()=> handleDelete(student.id)}
-                  >Delete</button>
+                  <button onClick={() => handleDelete(s.id)}>Delete</button>
                 </td>
                 <td>
-                  <button onClick={() => handleEdit(student)}>Update</button>
+                  <button onClick={() => handleEdit(s)}>Edit</button>
                 </td>
               </tr>
             ))}
           </tbody>
-
         </table>
-
       </div>
 
     </div>

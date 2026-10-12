@@ -2,7 +2,6 @@ import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatCard from "../Components/StatCard";
-import axios from "axios";
 import api from "../../api/axios";
 
 const Dashboard = () => {
@@ -12,7 +11,7 @@ const Dashboard = () => {
 
   const getData = async (url, setData) => {
     try {
-      const response = await axios.get(url);
+      const response= await api.get(url);
       setData(response.data);
     } catch (error) {
       console.error(error);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from '../Components/DataTable';
-import axios from 'axios';
+import api from "../../api/axios"
 const Teachers = () => {
   const [teacher, setTeacher] = useState({
     teachers_name: "",

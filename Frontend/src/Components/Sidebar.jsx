@@ -33,38 +33,40 @@ const Sidebar = () => {
       <h2>SMS</h2>
 
       <ul>
+        {/* Dashboard — visible to all roles */}
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+
+        {/* STUDENT: see their own details */}
         {user?.role === "STUDENT" && (
           <li>
             <Link to="/my-details">My Details</Link>
           </li>
         )}
+
+        {/* ADMIN / TEACHER: student management */}
         {(user?.role === "ADMIN" || user?.role === "TEACHER") && (
           <li>
-            <Link to="/dashboard">  Dashboard</Link>
+            <Link to="/students">Students</Link>
           </li>
         )}
 
-        {(user?.role === "ADMIN" || user?.role === "TEACHER") && (
-          <li>
-            <Link to="/students">student</Link>
-          </li>
-        )}
+        {/* ADMIN only: teachers and users */}
         {user?.role === "ADMIN" && (
-
           <li>
-            <Link to="/teachers"> Teachers</Link>
+            <Link to="/teachers">Teachers</Link>
           </li>
         )}
         {user?.role === "ADMIN" && (
           <li>
-            <Link to="/users"> Users</Link>
+            <Link to="/users">Users</Link>
           </li>
         )}
 
         <li>
-          <Link to="/" onClick={handleLLogout} >Logout</Link>
+          <Link to="/" onClick={handleLLogout}>Logout</Link>
         </li>
-
       </ul>
 
     </div>

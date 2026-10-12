@@ -1,86 +1,91 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css'
-import api from '../../api/axios';
+import './Login.css';
+import api from "../../api/axios"
 
 const Login = () => {
     const navigate = useNavigate();
-    const [error, setError] = useState("")
-    const[loading, setLoading] = useState(false)
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         userName: "",
         password: ""
     });
 
-   async function submitForm(e) {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    async function submitForm(e) {
         e.preventDefault();
-        if (formData.userName === "") {
-            alert("enter username");
+        setError("");
+
+        if (!formData.userName.trim()) {
+            setError("Please enter your username");
             return;
         }
-        if (formData.password === "") {
-            alert("please enter the password");
+        if (!formData.password) {
+            setError("Please enter your password");
             return;
         }
+
         const user = {
-            userName: formData.userName,
+            userName: formData.userName.trim(),
             password: formData.password
         };
+
         setLoading(true);
-        await new Promise(resolve => setTimeout (resolve, 2000));
+
         try {
-            console.log("Sending to backend:", user);
-            await api.post("/public/login", user),{
-                withCredentials : true
-            };
-            localStorage.setItem("userName", formData.userName);
-            localStorage.setItem("password", formData.password);
+            // api instance already has withCredentials: true configured globally
+            await api.post("/public/login", user);
+
+            // Persist safe session state (never store plaintext passwords)
+            localStorage.setItem("userName", user.userName);
+            localStorage.setItem("IsLoggedIn", "true");
+
             setFormData({
                 userName: "",
                 password: ""
             });
-            localStorage.setItem("IsLoggedIn","true");
-            setError("")
+
             navigate("/dashboard");
-        }
-        catch (error) {
+        } catch (err) {
+            console.error("Login failed:", err);
+            setError(err.response?.data?.message || "Invalid username or password");
+            setFormData((prev) => ({
+                ...prev,
+                password: ""
+            }));
+        } finally {
             setLoading(false);
-           setError("Invalid username and password");
-           setFormData({
-            userName : "",
-            password : ""
-           });
         }
-    }
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-        console.log(formData);
     }
 
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={submitForm}>
                 <div className="form-group">
-                    <label className="login-label">Username</label><br />
+                    <label className="login-label">Username</label>
                     <input
                         className="login-input"
-                        type="password"
+                        type="text"
                         placeholder="Enter username"
                         name="userName"
                         value={formData.userName}
                         onChange={handleChange}
+                        autoComplete="username"
+                        required
                     />
                 </div>
 
                 <div className="form-group">
-                    <label className="login-label">Password</label><br />
+                    <label className="login-label">Password</label>
                     <input
                         className="login-input"
                         type="password"
@@ -88,18 +93,29 @@ const Login = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        autoComplete="current-password"
+                        required
                     />
                 </div>
 
                 <div className="button-group">
-                    <button className="login-button" type="submit" >{loading ? "Logging In ..." : "Login"}</button>
+                    <button 
+                        className="login-button" 
+                        type="submit" 
+                        disabled={loading}
+                    >
+                        {loading ? "Logging In..." : "Login"}
+                    </button>
                 </div>
-                {error && <p className='error'>{error}</p>}
-                
+
+                {error && <p className="error">{error}</p>}
 
                 <div className="signup-text">
                     <p>
-                        Don't have an account? <Link className="signup-link" to="/signin">Sign Up</Link>
+                        Don't have an account?{" "}
+                        <Link className="signup-link" to="/signin">
+                            Sign Up
+                        </Link>
                     </p>
                 </div>
             </form>

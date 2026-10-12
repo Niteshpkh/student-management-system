@@ -19,7 +19,7 @@ public class StudentEntity {
     @NonNull
     private String Parents_name;
     @NonNull
-    private Long contact_no;
+    private String contact_no;
 
 
 }

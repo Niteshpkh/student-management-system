@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from "../../api/axios";
 import "./SignIn.css";
 
 const SignIn = () => {
@@ -57,7 +57,7 @@ const SignIn = () => {
     role: formData.role
   };
   try{
-   const response =  await axios.post("http://localhost:8080/public/signup", user);
+   const response =  await api.post("/public/signup", user);
    console.log(response);
     alert("Account created successfully");
      setFormData({

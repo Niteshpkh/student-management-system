@@ -48,7 +48,7 @@ public class TeacherController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeacherById(@Valid @PathVariable ObjectId id) {
         boolean deleted = teacherServices.deleteTeacher(id);
         if (deleted) {
