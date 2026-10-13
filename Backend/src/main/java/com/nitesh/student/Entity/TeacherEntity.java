@@ -1,5 +1,4 @@
 package com.nitesh.student.Entity;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 public class TeacherEntity {
     @Id
-    private ObjectId id;
+    private String id;
     private String teachers_name;
     private String email;
     private String qualification;

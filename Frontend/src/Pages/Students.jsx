@@ -26,15 +26,15 @@ const studentList = Array.isArray(res.data?.students)
 setStudents(studentList);
   };
 
-  const getMyData = async () => {
-    try {
-      const response = await api.get("/student_data/me");
-      const data = response.data;
-      setStudents(Array.isArray(data) ? data : [data]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+const userRole = localStorage.getItem("role"); // e.g. "ADMIN", "TEACHER", "STUDENT"
+
+useEffect(() => {
+  if (userRole === "STUDENT") {
+    api.get("/student_data/me")
+      .then((res) => setMyDetails(res.data))
+      .catch((err) => console.log("Profile not found:", err));
+  }
+}, [userRole]);
 
   useEffect(() => {
     api.get("/user/current")
