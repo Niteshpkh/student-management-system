@@ -53,7 +53,7 @@ useEffect(() => {
                     break;
 
                 case "STUDENT":
-                    getData("/student/me", setStudents);
+                    getData("/student_data/me", setStudents);
                     break;
 
                 default:

@@ -1,60 +1,114 @@
-/* User.css */
-
-.user-container {
-  padding: 30px;
-  width: 100%;
+.user-page-container {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.user-container h2 {
-  margin-bottom: 25px;
-  font-size: 28px;
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
 }
 
-/* Table */
+.user-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.refresh-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.refresh-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
 
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: left;
 }
 
 .user-table th,
 .user-table td {
-  padding: 14px 18px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
 }
 
 .user-table th {
-  background-color: #f4f4f4;
+  background-color: #f9fafb;
   font-weight: 600;
+  color: #4b5563;
 }
 
-.user-table tr:hover {
-  background-color: #f9f9f9;
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Delete button */
+.role-admin {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.role-teacher {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.role-student {
+  background-color: #dcfce7;
+  color: #166534;
+}
 
 .delete-btn {
-  padding: 8px 14px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #ffffff;
+  background-color: #ef4444;
   border: none;
-  border-radius: 5px;
-  background-color: #dc3545;
-  color: white;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
 }
 
-.delete-btn:hover {
-  background-color: #c82333;
+.delete-btn:hover:not(:disabled) {
+  background-color: #dc2626;
 }
 
-/* Empty users */
+.delete-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 
-.no-users {
+.empty-cell {
   text-align: center;
-  padding: 30px;
-  color: #777;
+  color: #6b7280;
+  padding: 2rem !important;
+}
+
+.error-message {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-radius: 6px;
+  font-size: 0.875rem;
 }

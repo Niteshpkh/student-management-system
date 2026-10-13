@@ -28,7 +28,7 @@ setStudents(studentList);
 
   const getMyData = async () => {
     try {
-      const response = await api.get("/student/me");
+      const response = await api.get("/student_data/me");
       const data = response.data;
       setStudents(Array.isArray(data) ? data : [data]);
     } catch (error) {
