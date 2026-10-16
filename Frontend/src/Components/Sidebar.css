@@ -1,25 +1,108 @@
-.sidebar{
-    width:250px;
-    min-height:100vh;
-    background:#1f2937;
-    color:white;
-    padding:20px;
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #111827;
+  color: #f3f4f6;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1f2937;
 }
 
-.sidebar h2{
-    margin-bottom:30px;
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1f2937;
+  margin-bottom: 16px;
 }
 
-.sidebar ul{
-    list-style:none;
-    padding:0;
+.sidebar-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
 }
 
-.sidebar li{
-    margin-bottom:20px;
+.sidebar-brand-text h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.sidebar a{
-    color:white;
-    text-decoration:none;
+.sidebar-brand-text span {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.sidebar-role-badge {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #fca5a5;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sidebar-menu li a:hover {
+  background: #1f2937;
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.menu-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #1f2937;
+  margin: 12px 0;
+}
+
+.sidebar-home-link {
+  color: #93c5fd !important;
+}
+
+.sidebar-home-link:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: #60a5fa !important;
+}
+
+.sidebar-logout-link {
+  color: #f87171 !important;
+}
+
+.sidebar-logout-link:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
 }

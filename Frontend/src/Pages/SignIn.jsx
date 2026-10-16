@@ -65,9 +65,9 @@ const SignIn = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: ""
+     role: ""
   });
-  navigate("/");
+  navigate("/login");
   }
   catch(error){
     console.log(error);
@@ -80,7 +80,15 @@ return (
 
   <div className="signup-container">
     <div className="signup-card">
-      <h1>Student Management System</h1>
+      <div style={{ textAlign: "center", marginBottom: "12px" }}>
+        <Link to="/" style={{ color: "#c51a1a", fontWeight: "600", fontSize: "14px", textDecoration: "none" }}>
+          ← Back to Home
+        </Link>
+      </div>
+      <h1>Rational Academy</h1>
+      <p style={{ color: "#666", fontSize: "14px", marginTop: "-6px", marginBottom: "16px" }}>
+        Sundarharaicha-8, Salakpur, Morang (Nursery - Grade 8)
+      </p>
       <h2>Create Account</h2>
 
       <form onSubmit={handleSubmit}>
@@ -95,7 +103,7 @@ return (
         />
 
         <input
-          type="text"
+          type="password"
           placeholder="Enter Password" name="password" value={formData.password} onChange={handleChange}
         />
 
@@ -121,7 +129,7 @@ return (
 
       <p>
         Already have an account?{" "}
-        <Link to="/">Login</Link>
+        <Link to="/login">Login</Link>
       </p>
     </div>
   </div>

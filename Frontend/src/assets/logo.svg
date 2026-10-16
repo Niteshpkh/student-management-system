@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="skyGrad" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#bae6fd"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
+    </radialGradient>
+
+    <linearGradient id="redRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e11d48"/>
+      <stop offset="40%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="40%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+
+    <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#b91c1c"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </linearGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+
+    <!-- Paths for curved text -->
+    <path id="topTextArc" d="M 90,240 A 160,160 0 0,1 410,240" fill="none" />
+    <path id="bottomTextArc" d="M 410,250 A 160,160 0 0,1 90,250" fill="none" />
+  </defs>
+
+  <g filter="url(#dropShadow)">
+    <!-- Outer Gold Border -->
+    <circle cx="250" cy="230" r="215" fill="none" stroke="url(#goldGrad)" stroke-width="7"/>
+
+    <!-- Red Ring -->
+    <circle cx="250" cy="230" r="200" fill="url(#redRing)" stroke="#7f1d1d" stroke-width="4"/>
+
+    <!-- Inner Gold Border -->
+    <circle cx="250" cy="230" r="140" fill="none" stroke="url(#goldGrad)" stroke-width="5"/>
+
+    <!-- Inner Sky Blue Background -->
+    <circle cx="250" cy="230" r="136" fill="url(#skyGrad)"/>
+
+    <!-- Stars on Red Ring -->
+    <!-- Left Star -->
+    <g transform="translate(95, 205) scale(1.1)">
+      <polygon points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,5.5 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+    </g>
+    <!-- Right Star -->
+    <g transform="translate(405, 205) scale(1.1)">
+      <polygon points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,5.5 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+    </g>
+
+    <!-- Nepali School Name on Top Arc -->
+    <text font-family="'Mukta', 'Segoe UI', 'Noto Sans Devanagari', sans-serif" font-weight="900" font-size="34" fill="#ffffff" letter-spacing="2">
+      <textPath href="#topTextArc" startOffset="50%" text-anchor="middle">
+        रेस्नल एकेडेमी
+      </textPath>
+    </text>
+
+    <!-- Nepali Location on Bottom Arc -->
+    <text font-family="'Mukta', 'Segoe UI', 'Noto Sans Devanagari', sans-serif" font-weight="700" font-size="20" fill="#ffffff" letter-spacing="1">
+      <textPath href="#bottomTextArc" startOffset="50%" text-anchor="middle">
+        सुन्दरहरैँचा न.पा. -८, सलकपुर, मोरङ
+      </textPath>
+    </text>
+
+    <!-- Golden Laurel / Wheat Wreath -->
+    <g stroke="url(#goldGrad)" stroke-width="2.5" fill="#f59e0b" opacity="0.95">
+      <!-- Left branch -->
+      <path d="M 230,325 C 190,320 155,280 155,225 C 155,180 175,145 190,135" fill="none" stroke-width="4"/>
+      <!-- Left leaves -->
+      <path d="M 175,142 C 160,140 155,160 170,165 C 185,160 185,145 175,142 Z"/>
+      <path d="M 160,170 C 145,170 145,190 160,195 C 175,190 172,175 160,170 Z"/>
+      <path d="M 152,205 C 137,208 138,228 154,230 C 168,226 166,210 152,205 Z"/>
+      <path d="M 156,242 C 142,248 147,268 162,267 C 174,262 170,246 156,242 Z"/>
+      <path d="M 172,278 C 160,285 168,303 183,300 C 194,293 186,280 172,278 Z"/>
+      <path d="M 200,305 C 190,314 202,328 215,322 C 224,313 214,302 200,305 Z"/>
+
+      <!-- Right branch -->
+      <path d="M 270,325 C 310,320 345,280 345,225 C 345,180 325,145 310,135" fill="none" stroke-width="4"/>
+      <!-- Right leaves -->
+      <path d="M 325,142 C 340,140 345,160 330,165 C 315,160 315,145 325,142 Z"/>
+      <path d="M 340,170 C 355,170 355,190 340,195 C 325,190 328,175 340,170 Z"/>
+      <path d="M 348,205 C 363,208 362,228 346,230 C 332,226 334,210 348,205 Z"/>
+      <path d="M 344,242 C 358,248 353,268 338,267 C 326,262 330,246 344,242 Z"/>
+      <path d="M 328,278 C 340,285 332,303 317,300 C 306,293 314,280 328,278 Z"/>
+      <path d="M 300,305 C 310,314 298,328 285,322 C 276,313 286,302 300,305 Z"/>
+
+      <!-- Ribbon tie at bottom of wreath -->
+      <circle cx="250" cy="328" r="8" fill="#eab308"/>
+      <path d="M 242,328 Q 230,340 215,335 Q 230,330 244,325 Z" fill="#eab308"/>
+      <path d="M 258,328 Q 270,340 285,335 Q 270,330 256,325 Z" fill="#eab308"/>
+    </g>
+
+    <!-- Open Book in Center -->
+    <g transform="translate(180, 145)">
+      <!-- Left Page -->
+      <path d="M 70,120 C 50,113 20,113 0,120 L 0,18 C 20,10 50,10 70,18 Z" 
+            fill="#ffffff" stroke="#b91c1c" stroke-width="4.5" stroke-linejoin="round"/>
+      <!-- Right Page -->
+      <path d="M 70,120 C 90,113 120,113 140,120 L 140,18 C 120,10 90,10 70,18 Z" 
+            fill="#ffffff" stroke="#b91c1c" stroke-width="4.5" stroke-linejoin="round"/>
+      <!-- Center spine line -->
+      <line x1="70" y1="18" x2="70" y2="120" stroke="#b91c1c" stroke-width="4"/>
+      <!-- Subtle inner page lines for texture -->
+      <line x1="15" y1="38" x2="55" y2="38" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="15" y1="55" x2="55" y2="55" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="15" y1="72" x2="55" y2="72" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="15" y1="89" x2="55" y2="89" stroke="#cbd5e1" stroke-width="2"/>
+
+      <line x1="85" y1="38" x2="125" y2="38" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="85" y1="55" x2="125" y2="55" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="85" y1="72" x2="125" y2="72" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="85" y1="89" x2="125" y2="89" stroke="#cbd5e1" stroke-width="2"/>
+    </g>
+
+    <!-- Bottom Ribbon Banner (स्थापना : २०७२) -->
+    <!-- Ribbon tails -->
+    <path d="M 60,420 L 20,385 L 85,385 L 85,445 Z" fill="#7f1d1d" stroke="#581c87" stroke-width="1"/>
+    <path d="M 440,420 L 480,385 L 415,385 L 415,445 Z" fill="#7f1d1d" stroke="#581c87" stroke-width="1"/>
+    <!-- Folded under shadows -->
+    <polygon points="85,415 85,445 110,415" fill="#450a0a"/>
+    <polygon points="415,415 415,445 390,415" fill="#450a0a"/>
+
+    <!-- Main Ribbon Body -->
+    <rect x="75" y="415" width="350" height="65" rx="10" fill="url(#ribbonGrad)" stroke="url(#goldGrad)" stroke-width="3"/>
+
+    <!-- Ribbon Text: स्थापना : २०७२ -->
+    <text x="250" y="458" font-family="'Mukta', 'Segoe UI', 'Noto Sans Devanagari', sans-serif" font-weight="900" font-size="28" fill="#ffffff" text-anchor="middle" letter-spacing="2">
+      स्थापना : २०७२
+    </text>
+  </g>
+</svg>

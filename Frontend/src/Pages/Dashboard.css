@@ -1,7 +1,7 @@
 .dashboard {
   display: flex;
   min-height: 100vh;
-  background: #f5f7fb;
+  background: #f8fafc;
 }
 
 .main-content {
@@ -11,69 +11,101 @@
 }
 
 .dashboard-body {
-  padding: 30px;
+  padding: 32px 36px;
 }
 
-/* Dashboard heading */
-
-.dashboard-body h1 {
-  margin: 0;
-  font-size: 32px;
-  color: #1f2937;
-}
-
-.dashboard-body > p {
-  margin-top: 8px;
+.dashboard-header-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+  border: 1px solid #fee2e2;
+  border-left: 5px solid #dc2626;
+  padding: 24px 28px;
+  border-radius: 16px;
   margin-bottom: 30px;
-  color: #6b7280;
-  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-header-banner h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1e293b;
+  font-family: 'Outfit', sans-serif;
+}
+
+.dashboard-header-banner p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14.5px;
 }
 
 /* Cards container */
-
 .stats-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
-/* Individual card */
-
+/* Individual card styling */
 .stat-card {
-  background: white;
-  padding: 25px;
+  background: #ffffff;
+  padding: 24px 22px;
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(185, 28, 28, 0.09);
+  border-color: #fca5a5;
 }
 
-/* Card title */
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-.stat-card h3 {
+.stat-card-title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Card number */
+.stat-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background-color: #fee2e2;
+  border-radius: 10px;
+  font-size: 20px;
+}
 
-.stat-card p {
-  margin: 12px 0 0;
-  font-size: 36px;
-  font-weight: 700;
-  color: #111827;
+.stat-card-value {
+  margin: 12px 0 4px 0;
+  font-size: 38px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  font-family: 'Outfit', sans-serif;
+}
+
+.stat-card-subtitle {
+  margin: 0;
+  font-size: 12.5px;
+  color: #94a3b8;
+  font-weight: 500;
 }
 
 /* Tablet */
-
 @media (max-width: 900px) {
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
@@ -81,21 +113,16 @@
 }
 
 /* Mobile */
-
 @media (max-width: 600px) {
   .dashboard-body {
-    padding: 20px;
+    padding: 20px 16px;
   }
 
-  .dashboard-body h1 {
-    font-size: 26px;
+  .dashboard-header-banner h1 {
+    font-size: 22px;
   }
 
   .stats-container {
     grid-template-columns: 1fr;
-  }
-
-  .stat-card {
-    padding: 22px;
   }
 }

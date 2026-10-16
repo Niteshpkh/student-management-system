@@ -22,17 +22,23 @@ const Dashboard = () => {
     {
       type : "student",
       title:"Students",
-      value: students.length
+      value: students.length,
+      icon: "🎓",
+      subtitle: "Enrolled Nursery - Gr 8"
     },
     {
       type : "teachers", 
       title : "Teachers",
-      value : teachers.length
+      value : teachers.length,
+      icon: "👨‍🏫",
+      subtitle: "Dedicated Educators"
     },
     {
       type : "user",
       title : "Users",
-      value : users.length
+      value : users.length,
+      icon: "👥",
+      subtitle: "System User Accounts"
     }
   ];
 
@@ -79,16 +85,21 @@ useEffect(() => {
     <div className="dashboard">
       <div className="main-content">
         <div className="dashboard-body">
-          <h1>Dashboard</h1>
-          <p>Welcome to Student Management System</p>
+          <div className="dashboard-header-banner">
+            <h1>Rational Academy Dashboard</h1>
+            <p>सुन्दरहरैँचा-८, सलकपुर, मोरङ • Academic & Administrative Overview (Nursery - Grade 8)</p>
+          </div>
           <div className="stats-container">
-             {cards.map((card)=>(
-    <StatCard 
-    key={card.title} 
-    value={card.value} 
-    />
-     ))}
-     </div>
+            {cards.map((card) => (
+              <StatCard 
+                key={card.title} 
+                title={card.title}
+                value={card.value} 
+                icon={card.icon}
+                subtitle={card.subtitle}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

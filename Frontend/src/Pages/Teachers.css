@@ -60,8 +60,8 @@
 }
 
 .form-input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .form-input::placeholder {
@@ -75,23 +75,26 @@
 }
 
 .submit-btn {
-  padding: 0.6rem 1.25rem;
+  padding: 0.65rem 1.4rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25);
+  transition: all 0.2s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #4338ca;
+  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(220, 38, 38, 0.35);
 }
 
 .submit-btn:disabled {
-  background-color: #a5b4fc;
+  background: #fca5a5;
   cursor: not-allowed;
 }
 

@@ -47,16 +47,23 @@ public class StudentService {
 
     // Get details of the currently logged-in student
     public StudentEntity getMyStudent(String username) {
+        System.out.println(">>> CHECK USERNAME: [" + username + "]");
+
         UserEntity user = userRepo.findByUserName(username);
+        System.out.println(">>> FOUND USER: " + user);
+
+        if (user != null) {
+            System.out.println(">>> RAW ROLE: [" + user.getRole() + "]");
+            System.out.println(">>> STUDENT ID LINK: [" + user.getStudentId() + "]");
+        }
 
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        // Safe conversion: handles Enum or String, case-insensitively
-        String roleStr = String.valueOf(user.getRole()).trim();
+        String roleStr = String.valueOf(user.getRole()).trim().replace("ROLE_", "");
         if (!"STUDENT".equalsIgnoreCase(roleStr)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a student");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a student (found: " + roleStr + ")");
         }
 
         if (user.getStudentId() == null || user.getStudentId().toString().trim().isEmpty()) {
@@ -66,7 +73,6 @@ public class StudentService {
         return studentRepo.findById(user.getStudentId().toString())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student profile record not found"));
     }
-
     public Page<StudentEntity> getStudents(int page, int size, String sortBy, String direction, String search) {
         Sort sort = direction.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
