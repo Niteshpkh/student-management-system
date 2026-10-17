@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Login.css';
 import api from "../../api/axios"
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [error, setError] = useState("");
+    const [successMsg, setSuccessMsg] = useState(location.state?.successMessage || "");
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
-        userName: "",
+        userName: location.state?.prefillUser || "",
         password: ""
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setError("");
+        setSuccessMsg("");
         setFormData((prev) => ({
             ...prev,
             [name]: value
@@ -24,6 +28,7 @@ const Login = () => {
     async function submitForm(e) {
         e.preventDefault();
         setError("");
+        setSuccessMsg("");
 
         if (!formData.userName.trim()) {
             setError("Please enter your username");
@@ -139,6 +144,7 @@ const Login = () => {
                     </button>
                 </div>
 
+                {successMsg && <p className="success">{successMsg}</p>}
                 {error && <p className="error">{error}</p>}
 
                 <div className="signup-text">
