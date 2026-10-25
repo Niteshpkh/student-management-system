@@ -89,14 +89,6 @@ const Sidebar = () => {
         )}
 
         <li className="sidebar-divider"></li>
-
-        <li>
-          <Link to="/" className="sidebar-home-link">
-            <span className="menu-icon">🌐</span>
-            <span>School Website</span>
-          </Link>
-        </li>
-
         <li>
           <Link to="/" onClick={handleLLogout} className="sidebar-logout-link">
             <span className="menu-icon">🚪</span>
